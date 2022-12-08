@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormApplyMeetingMapper">
+
+	<resultMap id="formApplyMeetingMap" type="com.sinosoft.ie.booster.workflow.entity.FormApplyMeetingEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="applyUser" column="apply_user"/>
+		<result property="position" column="position"/>
+		<result property="conferenceName" column="conference_name"/>
+		<result property="conferenceTheme" column="conference_theme"/>
+		<result property="conferenceType" column="conference_type"/>
+		<result property="estimatePeople" column="estimate_people"/>
+		<result property="conferenceRoom" column="conference_room"/>
+		<result property="administrator" column="administrator"/>
+		<result property="lookPeople" column="look_people"/>
+		<result property="memo" column="memo"/>
+		<result property="attendees" column="attendees"/>
+		<result property="applyMaterial" column="apply_material"/>
+		<result property="estimatedAmount" column="estimated_amount"/>
+		<result property="otherAttendee" column="other_attendee"/>
+		<result property="startDate" column="start_date"/>
+		<result property="endDate" column="end_date"/>
+		<result property="fileJson" column="file_json"/>
+		<result property="describe" column="describe"/>
+	</resultMap>
+</mapper>

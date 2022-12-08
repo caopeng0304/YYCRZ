@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormApplyDeliverGoodsMapper">
+
+	<resultMap id="formApplyDeliverGoodsMap" type="com.sinosoft.ie.booster.workflow.entity.FormApplyDeliverGoodsEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="customerName" column="customer_name"/>
+		<result property="contacts" column="contacts"/>
+		<result property="contactPhone" column="contact_phone"/>
+		<result property="customerAddress" column="customer_address"/>
+		<result property="goodsBelonged" column="goods_belonged"/>
+		<result property="invoiceDate" column="invoice_date"/>
+		<result property="freightCompany" column="freight_company"/>
+		<result property="deliveryType" column="delivery_type"/>
+		<result property="transportNum" column="transport_num"/>
+		<result property="freightCharges" column="freight_charges"/>
+		<result property="cargoInsurance" column="cargo_insurance"/>
+		<result property="description" column="description"/>
+		<result property="invoiceValue" column="invoice_value"/>
+	</resultMap>
+</mapper>

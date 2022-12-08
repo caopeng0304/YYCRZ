@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinosoft.ie.booster.seata.demo.dao.TransactionMapper">
+	<resultMap id="BaseResultMap" type="com.sinosoft.ie.booster.seata.demo.po.Transaction">
+		<!--@mbg.generated -->
+		<!--@Table transaction -->
+		<!-- generated on Tue Mar 22 14:34:30 GMT+08:00 2022 -->
+		<id column="tx_id" jdbcType="VARCHAR" property="txId"/>
+		<id column="action_id" jdbcType="VARCHAR" property="actionId"/>
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+		<result column="user_id" jdbcType="VARCHAR" property="userId"/>
+		<result column="amount" jdbcType="VARCHAR" property="amount"/>
+		<result column="type" jdbcType="VARCHAR" property="type"/>
+		<result column="state" jdbcType="SMALLINT" property="state"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		<!--@mbg.generated -->
+		tx_id, action_id, create_time, update_time, user_id, amount, `type`, `state`
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+		<!--@mbg.generated -->
+		select
+		<include refid="Base_Column_List"/>
+		from transaction
+		where tx_id = #{txId,jdbcType=VARCHAR}
+		and action_id = #{actionId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="map">
+		<!--@mbg.generated -->
+		delete from transaction
+		where tx_id = #{txId,jdbcType=VARCHAR}
+		and action_id = #{actionId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" keyColumn="action_id" keyProperty="actionId" parameterType="com.sinosoft.ie.booster.seata.demo.po.Transaction"
+			useGeneratedKeys="true">
+		<!--@mbg.generated -->
+		insert into transaction (tx_id, create_time, update_time,
+		user_id, amount, `type`,
+		`state`)
+		values (#{txId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{userId,jdbcType=VARCHAR}, #{amount,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
+		#{state,jdbcType=SMALLINT})
+	</insert>
+	<insert id="insertSelective" keyColumn="action_id" keyProperty="actionId"
+            parameterType="com.sinosoft.ie.booster.seata.demo.po.Transaction" useGeneratedKeys="true">
+		<!--@mbg.generated -->
+		insert into transaction
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="txId != null">
+				tx_id,
+			</if>
+			<if test="actionId != null">
+				action_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="amount != null">
+				amount,
+			</if>
+			<if test="type != null">
+				`type`,
+			</if>
+			<if test="state != null">
+				`state`,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="txId != null">
+				#{txId,jdbcType=VARCHAR},
+			</if>
+			<if test="actionId != null">
+				#{actionId,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null">
+				#{amount,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=SMALLINT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.sinosoft.ie.booster.seata.demo.po.Transaction">
+		<!--@mbg.generated -->
+		update transaction
+		<set>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null">
+				amount = #{amount,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				`type` = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				`state` = #{state,jdbcType=SMALLINT},
+			</if>
+		</set>
+		where tx_id = #{txId,jdbcType=VARCHAR}
+		and action_id = #{actionId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.sinosoft.ie.booster.seata.demo.po.Transaction">
+		<!--@mbg.generated -->
+		update transaction
+		set create_time = #{createTime,jdbcType=TIMESTAMP},
+		update_time = #{updateTime,jdbcType=TIMESTAMP},
+		user_id = #{userId,jdbcType=VARCHAR},
+		amount = #{amount,jdbcType=VARCHAR},
+		`type` = #{type,jdbcType=VARCHAR},
+		`state` = #{state,jdbcType=SMALLINT}
+		where tx_id = #{txId,jdbcType=VARCHAR}
+		and action_id = #{actionId,jdbcType=VARCHAR}
+	</update>
+</mapper>

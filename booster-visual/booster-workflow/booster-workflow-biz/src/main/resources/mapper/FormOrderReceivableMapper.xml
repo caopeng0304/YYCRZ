@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormOrderReceivableMapper">
+
+  <resultMap id="formOrderReceivableMap" type="com.sinosoft.ie.booster.workflow.entity.FormOrderReceivableEntity">
+                  <id property="id" column="id"/>
+                        <result property="orderId" column="order_id"/>
+                        <result property="summary" column="summary"/>
+                        <result property="receivableDate" column="receivable_date"/>
+                        <result property="receivableRate" column="receivable_rate"/>
+                        <result property="receivableMoney" column="receivable_money"/>
+                        <result property="receivableMode" column="receivable_mode"/>
+                        <result property="receivableState" column="receivable_state"/>
+                        <result property="description" column="description"/>
+                        <result property="sort" column="sort"/>
+            </resultMap>
+</mapper>

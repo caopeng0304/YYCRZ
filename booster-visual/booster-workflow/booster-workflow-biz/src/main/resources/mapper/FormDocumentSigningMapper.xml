@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormDocumentSigningMapper">
+
+	<resultMap id="formDocumentSigningMap" type="com.sinosoft.ie.booster.workflow.entity.FormDocumentSigningEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="fileName" column="file_name"/>
+		<result property="fileNum" column="file_num"/>
+		<result property="draftedPerson" column="drafted_person"/>
+		<result property="reader" column="reader"/>
+		<result property="filePreparation" column="file_preparation"/>
+		<result property="checkDate" column="check_date"/>
+		<result property="publicationDate" column="publication_date"/>
+		<result property="fileJson" column="file_json"/>
+		<result property="documentContent" column="document_content"/>
+		<result property="adviceColumn" column="advice_column"/>
+	</resultMap>
+</mapper>

@@ -1,0 +1,159 @@
+#set($name = "${genInfo.toLowerAttr(${genInfo.className})}")
+#set($packName = "${name.toLowerCase()}")
+package ${package.Controller};
+
+import com.sinosoft.ie.booster.common.core.model.PageListVO;
+import com.sinosoft.ie.booster.common.security.model.BoosterUser;
+import com.sinosoft.ie.booster.common.security.util.SecurityUtils;
+import org.springframework.web.bind.annotation.RestController;
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+import ${packageName}.model.${packName}.${genInfo.className}Pagination;
+import ${packageName}.model.${packName}.${genInfo.className}Form;
+import ${packageName}.model.${packName}.${genInfo.className}ListVO;
+import ${packageName}.model.${packName}.${genInfo.className}InfoVO;
+import ${package.Entity}.${table.entityName};
+import ${package.Service}.${table.serviceName};
+#foreach($grid in ${child})
+import ${package.Entity}.${grid.className}Entity;
+import ${packageName}.model.${packName}.${grid.className}Model;
+#end
+import com.sinosoft.ie.booster.visualdev.util.*;
+import com.sinosoft.ie.booster.common.core.util.JsonUtil;
+import com.sinosoft.ie.booster.common.core.model.PaginationVO;
+import com.sinosoft.ie.booster.common.core.model.ListVO;
+import com.sinosoft.ie.booster.admin.api.feign.RemoteBillRuleService;
+import com.sinosoft.ie.booster.admin.api.feign.RemoteUserService;
+import com.sinosoft.ie.booster.admin.api.feign.RemotePositionService;
+import com.sinosoft.ie.booster.admin.api.entity.SysPositionEntity;
+import com.sinosoft.ie.booster.common.core.util.R;
+import com.sinosoft.ie.booster.common.core.exception.DataException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.*;
+import javax.validation.Valid;
+
+/**
+ *
+ * ${genInfo.description}
+ * 版本： ${genInfo.version}
+ * 作者： ${genInfo.createUser}
+ * 日期： ${genInfo.createDate}
+ */
+@RestController
+@RequestMapping("/${genInfo.className}")
+public class ${table.controllerName} {
+
+    #set($serviceName = "${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}")
+    #set($formName = "${modelName.substring(0,1).toLowerCase()}${modelName.substring(1)}")
+    @Autowired
+    private ${table.serviceName} ${serviceName};
+    @Autowired
+    private RemoteUserService userService;
+    @Autowired
+    private RemoteBillRuleService billRuleService;
+    @Autowired
+    private RemotePositionService positionService;
+
+    @GetMapping("/List")
+    public R<PageListVO<${genInfo.className}ListVO>> list(${modelName}Pagination pagination) {
+        List<${table.entityName}> entity = ${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}.getlist(pagination);
+        List<${genInfo.className}ListVO> listVo = JsonUtil.getJsonToList(entity,${genInfo.className}ListVO.class );
+    #if(${page}=='0')
+        PageListVO<${genInfo.className}ListVO> vo=new PageListVO<>();
+        vo.setList(listVo);
+        PaginationVO page=JsonUtil.getJsonToBean(pagination,PaginationVO.class);
+        vo.setPagination(page);
+        return R.ok(vo);
+    #elseif(${page}=='1')
+        ListVO<${genInfo.className}ListVO> vo = new ListVO<>();
+        vo.setList(listVo);
+        return R.success(vo);
+    #end
+    }
+
+    @GetMapping("/{id}")
+    public R<${genInfo.className}InfoVO> info(@PathVariable("id") String id) {
+        ${table.entityName} entity = ${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}.getInfo(id);
+        ${genInfo.className}InfoVO vo = JsonUtil.getJsonToBean(entity, ${genInfo.className}InfoVO.class);
+        #foreach($grid in ${child})
+        List<${grid.className}Entity> ${grid.className}List = ${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}.Get${grid.className}List(id);
+            #set($list = "${grid.className.substring(0,1).toUpperCase()}${grid.className.substring(1)}")
+        vo.set${list}List(JsonUtil.getJsonToList(${grid.className}List,${grid.className}Model.class ));
+        #end
+        return R.ok(vo);
+    }
+
+    @PostMapping
+    public R<String> create(@RequestBody @Valid ${modelName}Form ${formName}Form) throws DataException {
+        BoosterUser userInfo = SecurityUtils.getUser();
+        #foreach($boosKey in ${system})
+            #set($model = "${genInfo.toUpperAttr(${boosKey.vModel})}")
+            #set($key = ${boosKey.config.boosKey})
+            #set($rule = ${boosKey.config.rule})
+            #if(${key}=='createUser')
+        ${formName}Form.set${model}(userInfo.getUsername());
+            #elseif(${key}=='createTime')
+        ${formName}Form.set${model}(DateUtil.getNow());
+            #elseif(${key}=='currDept')
+        ${formName}Form.set${model}(String.valueOf(userInfo.getDeptId()));
+            #elseif(${key}=='currOrganize')
+        ${formName}Form.set${model}(String.valueOf(userInfo.getDeptId()));
+            #elseif(${key}=='currPosition')
+        List<SysPositionEntity> positionList= positionService.getListByUserName(userInfo.getUsername()).getData();
+        ${formName}Form.set${model}(positionList.size()>0 ? positionList.get(0) : "");
+            #elseif(${key}=='billRule')
+        ${formName}Form.set${model}(billRuleService.getBillNumber("${rule}").getData());
+            #end
+        #end
+        ${table.entityName} entity = JsonUtil.getJsonToBean(${formName}Form, ${modelName}Entity.class);
+        #foreach($grid in ${child})
+            #set($list = "${grid.className.substring(0,1).toUpperCase()}${grid.className.substring(1).toLowerCase()}")
+        List<${grid.className}Entity> ${grid.className}List = JsonUtil.getJsonToList(${formName}Form.get${list}List(),${grid.className}Entity.class);
+        for(${grid.className}Entity entitys : ${grid.className}List){
+            #foreach($boosKey in ${grid.childList})
+                #set($key = ${boosKey.fieLdsModel.config.boosKey})
+                #set($rule = ${boosKey.fieLdsModel.config.rule})
+                #set($model = "${boosKey.fieLdsModel.vModel.substring(0,1).toUpperCase()}${boosKey.fieLdsModel.vModel.substring(1)}")
+                #if(${key}=='billRule')
+            entitys.set${model}(billRuleService.getBillNumber("${rule}").getData());
+                #end
+            #end
+        }
+        #end
+        ${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}.create(entity#foreach($grid in ${child}),${grid.className}List#end);
+        return R.ok("保存成功");
+    }
+
+    @PutMapping("/{id}")
+    public R<String> update(@PathVariable("id") String id,@RequestBody @Valid ${modelName}Form ${formName}Form) {
+        BoosterUser userInfo = SecurityUtils.getUser();
+        #foreach($boosKey in ${system})
+            #set($model = "${genInfo.toUpperAttr(${boosKey.vModel})}")
+            #set($key = ${boosKey.config.boosKey})
+            #set($rule = ${boosKey.config.rule})
+            #if(${key}=='modifyUser')
+        ${formName}Form.set${model}(userInfo.getUsername());
+            #elseif(${key}=='modifyTime')
+        ${formName}Form.set${model}(DateUtil.getNow());
+            #end
+        #end
+        ${table.entityName} entity = JsonUtil.getJsonToBean(${formName}Form, ${modelName}Entity.class);
+        #foreach($grid in ${child})
+            #set($list = "${grid.className.substring(0,1).toUpperCase()}${grid.className.substring(1).toLowerCase()}")
+        List<${grid.className}Entity> ${grid.className}List = JsonUtil.getJsonToList(${formName}Form.get${list}List(),${grid.className}Entity.class);
+        #end
+        ${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}.update(id,entity#foreach($grid in ${child}),${grid.className}List#end);
+        return R.ok("修改成功");
+    }
+
+    @DeleteMapping("/{id}")
+    public R<String> delete(@PathVariable("id") String id) {
+        ${table.entityName} entity = ${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}.getInfo(id);
+        ${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}.delete(entity);
+        return R.ok("删除成功");
+    }
+
+}

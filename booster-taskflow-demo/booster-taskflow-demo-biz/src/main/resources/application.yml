@@ -1,0 +1,39 @@
+server:
+  port: 7002
+
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST:booster-register}:${NACOS_PORT:8848}
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+  config:
+    import:
+      - nacos:application-@profiles.active@.yml
+      - nacos:${spring.application.name}-@profiles.active@.yml
+  profiles:
+    active: @profiles.active@
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:  # 数据源配置
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://booster-mysql:3306/booster_taskflow_demo?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
+
+# spring security 配置
+security:
+  oauth2:
+    client:
+      client-id: booster
+      client-secret: booster
+      scope: server
+##Mybatis开启控制台打印sql语句
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

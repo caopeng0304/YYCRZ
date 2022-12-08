@@ -1,0 +1,42 @@
+#set($name = "${context.genInfo.toLowerAttr(${context.className})}")
+package ${context.packageName}.model.$!{name.toLowerCase()};
+
+import com.sinosoft.ie.booster.common.core.model.Pagination;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import java.util.Date;
+
+/**
+ *
+ * ${context.genInfo.description}
+ * 版本: ${context.genInfo.version}
+ * 作者： ${context.genInfo.createUser}
+ * 日期： ${context.genInfo.createDate}
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ApiModel
+public class $!{context.className}Pagination extends Pagination {
+
+#foreach($fieLdsModel in ${context.searchList})
+    #set($vModel = "${fieLdsModel.prop}")
+    #set($boosKey = "${fieLdsModel.boosKey}")
+    #set($label = "${fieLdsModel.label}")
+    /**
+     * ${label}
+     */
+    @ApiModelProperty(value = "${label}")
+    #if(${boosKey}=='slider')
+    private Integer ${context.genInfo.toLowerAttr(${vModel})};
+
+    #elseif(${boosKey}=='date')
+    private long  ${context.genInfo.toLowerAttr(${vModel})};
+
+    #else
+    private String ${context.genInfo.toLowerAttr(${vModel})};
+
+    #end
+#end
+}

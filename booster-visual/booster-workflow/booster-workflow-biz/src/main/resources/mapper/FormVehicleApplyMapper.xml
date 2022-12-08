@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormVehicleApplyMapper">
+
+	<resultMap id="formVehicleApplyMap" type="com.sinosoft.ie.booster.workflow.entity.FormVehicleApplyEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="carMan" column="car_man"/>
+		<result property="department" column="department"/>
+		<result property="plateNum" column="plate_num"/>
+		<result property="destination" column="destination"/>
+		<result property="roadFee" column="road_fee"/>
+		<result property="kilometreNum" column="kilometre_num"/>
+		<result property="entourage" column="entourage"/>
+		<result property="description" column="description"/>
+		<result property="startDate" column="start_date"/>
+		<result property="endDate" column="end_date"/>
+	</resultMap>
+</mapper>

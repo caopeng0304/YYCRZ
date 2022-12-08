@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormLetterServiceMapper">
+
+	<resultMap id="formLetterServiceMap" type="com.sinosoft.ie.booster.workflow.entity.FormLetterServiceEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="hostUnit" column="host_unit"/>
+		<result property="title" column="title"/>
+		<result property="issuedNum" column="issued_num"/>
+		<result property="writingDate" column="writing_date"/>
+		<result property="shareNum" column="share_num"/>
+		<result property="mainDelivery" column="main_delivery"/>
+		<result property="copy" column="Copy"/>
+		<result property="fileJson" column="file_json"/>
+	</resultMap>
+</mapper>

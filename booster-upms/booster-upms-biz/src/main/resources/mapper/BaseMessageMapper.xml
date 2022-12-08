@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.admin.mapper.BaseMessageMapper">
+
+	<resultMap id="baseMessageMap" type="com.sinosoft.ie.booster.admin.api.entity.BaseMessageEntity">
+		<id property="id" column="id"/>
+		<result property="type" column="type"/>
+		<result property="title" column="title"/>
+		<result property="bodyText" column="body_text"/>
+		<result property="priorityLevel" column="priority_level"/>
+		<result property="toUserIds" column="to_user_ids"/>
+		<result property="isRead" column="is_read"/>
+		<result property="description" column="description"/>
+		<result property="sort" column="sort"/>
+		<result property="enabledFlag" column="enabled_flag"/>
+		<result property="delFlag" column="del_flag"/>
+		<result property="createTime" column="create_time"/>
+		<result property="createBy" column="create_by"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="updateBy" column="update_by"/>
+	</resultMap>
+
+	<select id="getMessageList" parameterType="map" resultMap="baseMessageMap">
+		SELECT m.id, m.title, m.type, r.is_read, m.create_time, m.create_by, m.update_time
+		FROM base_message m
+				 LEFT JOIN base_message_receive r ON r.message_id = m.id
+		where r.user_id = #{map.userId} ${map.sql}
+	</select>
+
+	<select id="getUnreadNoticeCount" parameterType="string" resultType="int">
+		SELECT COUNT(1)
+		FROM base_message_receive r
+				 LEFT JOIN base_message m ON m.id = r.message_id
+		WHERE 1 = 1
+		  AND r.user_id = #{userId}
+		  AND r.is_read = 0
+		  AND m.type = 1
+	</select>
+
+	<select id="getUnreadMessageCount" parameterType="string" resultType="int">
+		SELECT COUNT(1)
+		FROM base_message_receive r
+				 LEFT JOIN base_message m ON m.id = r.message_id
+		WHERE 1 = 1
+		  AND r.user_id = #{userId}
+		  AND r.is_read = 0
+		  AND m.type = 2
+	</select>
+
+	<select id="getInfoDefault" parameterType="int" resultMap="baseMessageMap">
+		SELECT *
+		FROM base_message
+		WHERE 1 = 1
+		  AND type = #{type}
+		ORDER BY create_time DESC
+	</select>
+</mapper>

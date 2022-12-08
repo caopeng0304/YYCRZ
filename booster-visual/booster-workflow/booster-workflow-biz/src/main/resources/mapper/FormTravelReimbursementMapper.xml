@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormTravelReimbursementMapper">
+
+	<resultMap id="formTravelReimbursementMap" type="com.sinosoft.ie.booster.workflow.entity.FormTravelReimbursementEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="applyUser" column="apply_user"/>
+		<result property="departmental" column="departmental"/>
+		<result property="billsNum" column="bills_num"/>
+		<result property="businessMission" column="business_mission"/>
+		<result property="setoutDate" column="setout_date"/>
+		<result property="returnDate" column="return_date"/>
+		<result property="destination" column="destination"/>
+		<result property="planeTicket" column="plane_ticket"/>
+		<result property="fare" column="fare"/>
+		<result property="getAccommodation" column="get_accommodation"/>
+		<result property="travelAllowance" column="travel_allowance"/>
+		<result property="other" column="other"/>
+		<result property="total" column="total"/>
+		<result property="reimbursementAmount" column="reimbursement_amount"/>
+		<result property="loanAmount" column="loan_amount"/>
+		<result property="sumOfMoney" column="sum_of_money"/>
+		<result property="travelerUser" column="traveler_user"/>
+		<result property="vehicleMileage" column="vehicle_mileage"/>
+		<result property="roadFee" column="road_fee"/>
+		<result property="parkingRate" column="parking_rate"/>
+		<result property="mealAllowance" column="meal_allowance"/>
+		<result property="breakdownFee" column="breakdown_fee"/>
+		<result property="reimbursementId" column="reimbursement_id"/>
+		<result property="railTransit" column="rail_transit"/>
+		<result property="applyDate" column="apply_date"/>
+	</resultMap>
+</mapper>

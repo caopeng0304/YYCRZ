@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormPayDistributionMapper">
+
+	<resultMap id="formPayDistributionMap" type="com.sinosoft.ie.booster.workflow.entity.FormPayDistributionEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="month" column="month"/>
+		<result property="issuingUnit" column="issuing_unit"/>
+		<result property="department" column="department"/>
+		<result property="position" column="position"/>
+		<result property="baseSalary" column="base_salary"/>
+		<result property="actualAttendance" column="actual_attendance"/>
+		<result property="allowance" column="allowance"/>
+		<result property="incomeTax" column="income_tax"/>
+		<result property="insurance" column="insurance"/>
+		<result property="performance" column="performance"/>
+		<result property="overtimePay" column="overtime_pay"/>
+		<result property="grossPay" column="gross_pay"/>
+		<result property="payroll" column="payroll"/>
+		<result property="description" column="description"/>
+	</resultMap>
+</mapper>

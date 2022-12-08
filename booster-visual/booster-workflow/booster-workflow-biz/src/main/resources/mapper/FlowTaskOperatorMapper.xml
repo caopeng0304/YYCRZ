@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FlowTaskOperatorMapper">
+
+	<resultMap id="flowTaskOperatorMap" type="com.sinosoft.ie.booster.workflow.entity.FlowTaskOperatorEntity">
+		<id property="id" column="id"/>
+		<result property="handleType" column="handle_type"/>
+		<result property="handleId" column="handle_id"/>
+		<result property="handleStatus" column="handle_status"/>
+		<result property="handleTime" column="handle_time"/>
+		<result property="nodeCode" column="node_code"/>
+		<result property="nodeName" column="node_name"/>
+		<result property="taskNodeId" column="task_node_id"/>
+		<result property="taskId" column="task_id"/>
+		<result property="type" column="type"/>
+		<result property="state" column="state"/>
+		<result property="completion" column="completion"/>
+		<result property="description" column="description"/>
+		<result property="createTime" column="create_time"/>
+	</resultMap>
+
+	<update id="updateFixedapprover" parameterType="map">
+		update flow_task_operator set completion ='1' where task_node_id = #{map.taskNodeId} and type =#{map.type}
+	</update>
+
+	<update id="updateDelegateUser" >
+		update flow_task_operator set completion ='1' where task_node_id = #{taskNodeId} and handle_id in (${userNames})
+	</update>
+
+	<update id="updateState">
+		update flow_task_operator set state ='-1' where task_id = #{taskId}
+	</update>
+
+	<update id="updateReject">
+		update flow_task_operator set completion ='-1' where task_id = #{taskId} and node_code in (${nodeId}) and completion ='0' and state ='0'
+	</update>
+</mapper>

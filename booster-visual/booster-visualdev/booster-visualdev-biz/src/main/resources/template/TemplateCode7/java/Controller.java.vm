@@ -1,0 +1,142 @@
+package ${package.Controller};
+
+import cn.hutool.core.convert.Convert;
+import com.sinosoft.ie.booster.admin.api.entity.SysDeptEntity;
+import com.sinosoft.ie.booster.admin.api.feign.RemoteDeptService;
+import com.sinosoft.ie.booster.common.core.util.JsonUtil;
+import com.sinosoft.ie.booster.visualdev.util.DateUtil;
+import org.springframework.web.bind.annotation.RestController;
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+#set($modelPackageName ="${genInfo.className.toLowerCase()}")
+
+import ${packageName}.model.${modelPackageName}.${genInfo.className}Form;
+import ${packageName}.model.${modelPackageName}.${genInfo.className}InfoVO;
+import ${package.Entity}.${table.entityName};
+import ${package.Service}.${table.serviceName};
+#foreach($grid in ${child})
+import ${package.Entity}.${grid.className}Entity;
+import ${packageName}.model.${modelPackageName}.${grid.className}Model;
+#end
+import com.sinosoft.ie.booster.common.security.model.BoosterUser;
+import com.sinosoft.ie.booster.admin.api.feign.RemoteBillRuleService;
+import com.sinosoft.ie.booster.common.security.util.SecurityUtils;
+import com.sinosoft.ie.booster.common.core.exception.WorkFlowException;
+import com.sinosoft.ie.booster.common.core.util.R;
+import com.sinosoft.ie.booster.common.core.exception.DataException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.*;
+import javax.validation.Valid;
+
+/**
+ *
+ * ${genInfo.description}
+ * 版本： ${genInfo.version}
+ * 作者： ${genInfo.createUser}
+ * 日期： ${genInfo.createDate}
+ */
+@RestController
+@RequestMapping("/${genInfo.className}")
+public class ${table.controllerName} {
+
+    #set($serviceName = "${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}")
+    #set($formName = "${modelName.substring(0,1).toLowerCase()}${modelName.substring(1)}")
+    @Autowired
+    private ${table.serviceName} ${serviceName};
+    @Autowired
+    private RemoteDeptService deptService;
+    @Autowired
+    private RemoteBillRuleService billRuleService;
+
+    @GetMapping("/{id}")
+    public R<${genInfo.className}InfoVO> info(@PathVariable("id") Long id) throws DataException{
+        ${table.entityName} entity = ${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}.getInfo(id);
+        ${genInfo.className}InfoVO vo = JsonUtil.getJsonToBean(entity, ${genInfo.className}InfoVO.class);
+		#foreach($boosKey in ${system})
+            #set($model = "${genInfo.toUpperAttr(${boosKey.vModel})}")
+            #set($key = ${boosKey.config.boosKey})
+            #set($rule = ${boosKey.config.rule})
+			#if(${key}=='currDept')
+        SysDeptEntity currDept = deptService.info(Integer.valueOf(vo.get${model}())).getData();
+		vo.set${model}(currDept!=null ? currDept.getName() : "");
+			#end
+		#end
+		#foreach($grid in ${child})
+            #set($className = "${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}")
+		List<${grid.className}Entity> ${className}List = ${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}.get${grid.className}List(id);
+		vo.set${grid.className}List(JsonUtil.getJsonToList(${className}List,${grid.className}Model.class ));
+		#end
+        return R.ok(vo);
+    }
+
+    @PostMapping
+    public R<String> save(@RequestBody @Valid ${modelName}Form ${formName}Form) throws WorkFlowException , DataException {
+        BoosterUser userInfo = SecurityUtils.getUser();
+        String billRules = "";
+		#foreach($boosKey in ${system})
+			#set($model = "${genInfo.toUpperAttr(${boosKey.vModel})}")
+            #set($key = ${boosKey.config.boosKey})
+            #set($rule = ${boosKey.config.rule})
+            #if(${key}=='createUser')
+        ${formName}Form.set${model}(userInfo.getUsername());
+            #elseif(${key}=='createTime')
+        ${formName}Form.set${model}(DateUtil.getNow());
+            #elseif(${key}=='currDept')
+        ${formName}Form.set${model}(String.valueOf(userInfo.getDeptId()));
+            #elseif(${key}=='billRule')
+		billRules = billRuleService.getBillNumber("${rule}").getData();
+        ${formName}Form.set${model}(billRules);
+            #end
+		#end
+		${table.entityName} entity = JsonUtil.getJsonToBean(${formName}Form, ${modelName}Entity.class);
+		#foreach($grid in ${child})
+            #set($className = "${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}")
+		List<${grid.className}Entity> ${className}List = JsonUtil.getJsonToList(${formName}Form.get${grid.className}List(),${grid.className}Entity.class);
+		for(${grid.className}Entity entitys : ${className}List){
+			#foreach($boosKey in ${grid.childList})
+			    #set($key = ${boosKey.fieLdsModel.config.boosKey})
+                #set($rule = ${boosKey.fieLdsModel.config.rule})
+				#set($model = "${genInfo.toUpperAttr(${boosKey.fieLdsModel.vModel})}")
+				#if(${key}=='billRule')
+			entitys.set${model}(billRuleService.getBillNumber("${rule}").getData();
+				#end
+			#end
+		}
+		#end
+        if (${formName}Form.getStatus().equals("1")) {
+            ${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}.save(null,Convert.toLong(${formName}Form.getFlowId()),entity,billRules#foreach($grid in ${child}), ${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}List#end);
+            return R.ok(null, "保存成功");
+        }
+        ${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}.submit(null, ${formName}Form.getFreeApprover(),Convert.toLong(${formName}Form.getFlowId()),entity,billRules#foreach($grid in ${child}), ${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}List#end);
+        return R.ok(null, "提交成功，请耐心等待");
+    }
+
+    @PutMapping("/{id}")
+    public R<String> submit(@PathVariable("id") Long id,@RequestBody @Valid ${modelName}Form ${formName}Form) throws WorkFlowException , DataException {
+        BoosterUser userInfo = SecurityUtils.getUser();
+		String billRules = "";
+		#foreach($boosKey in ${system})
+            #set($model = "${genInfo.toUpperAttr(${boosKey.vModel})}")
+            #set($key = ${boosKey.config.boosKey})
+            #set($rule = ${boosKey.config.rule})
+            #if(${key}=='modifyUser')
+        ${formName}Form.set${model}(userInfo.getUsername());
+            #elseif(${key}=='modifyTime')
+        ${formName}Form.set${model}(DateUtil.getNow());
+            #end
+		#end
+		${table.entityName} entity = JsonUtil.getJsonToBean(${formName}Form, ${modelName}Entity.class);
+		#foreach($grid in ${child})
+		List<${grid.className}Entity> ${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}List = JsonUtil.getJsonToList(${formName}Form.get${grid.className}List(),${grid.className}Entity.class);
+		#end
+        if (${formName}Form.getStatus().equals("1")) {
+            ${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}.save(id,Convert.toLong(${formName}Form.getFlowId()),entity,billRules#foreach($grid in ${child}), ${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}List#end);
+            return R.ok(null, "保存成功");
+        }
+        ${table.serviceName.substring(0,1).toLowerCase()}${table.serviceName.substring(1)}.submit(id, ${formName}Form.getFreeApprover(),Convert.toLong(${formName}Form.getFlowId()),entity,billRules#foreach($grid in ${child}),${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}List#end);
+        return R.ok(null, "提交成功，请耐心等待");
+    }
+}

@@ -1,0 +1,91 @@
+#set($name = "${context.genInfo.toLowerAttr(${context.className})}")
+#set($pKeyName =${context.pKeyName.toLowerCase()})
+#set($peimaryKeyName = "${context.genInfo.toUpperAttr(${pKeyName})}")
+#set($peimaryKeyname = "${context.genInfo.toLowerAttr(${pKeyName})}")
+package ${context.packageName}.model.$!{name.toLowerCase()};
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+/**
+ *
+ * ${context.genInfo.description}
+ * @版本： ${context.genInfo.version}
+ * @作者： ${context.genInfo.createUser}
+ * @日期： ${context.genInfo.createDate}
+ */
+@Data
+@ApiModel
+public class $!{context.className}ListVO{
+
+    /**
+     * 主键
+     */
+    @ApiModelProperty(value = "主键")
+    private String $!{peimaryKeyname};
+
+#foreach($field in ${context.tableModel.fields})
+#foreach($relField in ${context.columnList})
+    #set($Name=${field.field})
+    #set($fieldName=${field.fieldName})
+    #if(${relField.prop}==${Name})
+    /**
+     * ${fieldName}
+     */
+    @ApiModelProperty(value = "${fieldName}")
+    #set($type=${field.dataType.toLowerCase()})
+    #if(${type} =='localdatetime' || ${type} =='date'|| ${type} =='datetime'|| ${type} =='datetime2')
+    #set($type="Date")
+    #foreach($formField in ${context.formDataList})
+    #if(${formField.format}=='yyyy-MM-dd' && ${field.field}==${formField.vModel})
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    #elseif(${formField.format}=='yyyy-MM-dd HH:mm' && ${field.field}==${formField.vModel})
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    #elseif(${formField.format}=='yyyy-MM-dd HH' && ${field.field}==${formField.vModel})
+    @JsonFormat(pattern = "yyyy-MM-dd HH")
+    #elseif(${formField.format}=='yyyy-MM' && ${field.field}==${formField.vModel})
+    @JsonFormat(pattern = "yyyy-MM")
+    #elseif(${formField.format}=='yyyy' && ${field.field}==${formField.vModel})
+    @JsonFormat(pattern = "yyyy")
+    #elseif(${formField.format}=='yyyy-MM-dd HH:mm:ss' && ${field.field}==${formField.vModel})
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    #elseif(${formField.config.boosKey}=="createTime" && ${field.field}==${formField.vModel})
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    #elseif(${formField.config.boosKey}=="modifyTime" && ${field.field}==${formField.vModel})
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    #end
+    #end
+    private ${type} ${context.genInfo.toLowerAttr(${Name})};
+
+    #elseif(${type} =='nvarchar'||${type} =='nvarchar(max)'||${type} =='varchar'||${type} =='longtext'||${type} =='text')
+    #set($type="String")
+#foreach($formField in ${context.formDataList})
+    #if(${field.field}==${formField.vModel})
+        #if(${formField.multiple}=="true"|| ${formField.config.boosKey}=="checkbox")
+    private ${type}[] ${context.genInfo.toLowerAttr(${Name})};
+
+        #else
+    private ${type} ${context.genInfo.toLowerAttr(${Name})};
+
+        #end
+    #end
+#end
+    #elseif(${type}=='bigint'||${type}=='long')
+    #set($type="String")
+    private ${type} ${context.genInfo.toLowerAttr(${Name})};
+    
+     #elseif(${type}=='int'||${type}=='number')
+    #set($type="Integer")
+    private ${type} ${context.genInfo.toLowerAttr(${Name})};
+
+    #else
+    private String ${context.genInfo.toLowerAttr(${Name})};
+
+    #end
+    #end
+#end
+#end
+}

@@ -1,0 +1,76 @@
+#set($name = "${context.genInfo.toLowerAttr(${context.className})}")
+package ${context.packageName}.model.$!{name.toLowerCase()};
+
+#foreach($subfield in ${context.subtables})
+    #foreach($relField in ${context.formDataList})
+        #if(${relField.config.children})
+            #if(${relField.config.tableName}==${subfield.subKey})
+                #set($ChildName="${context.genInfo.toUpperAttr(${subfield.subValue})}")
+import ${context.packageName}.entity.${ChildName}Entity;
+            #end
+        #end
+    #end
+#end
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import java.util.List;
+import java.math.BigDecimal;
+
+/**
+ *
+ * ${context.genInfo.description}
+ * @版本： ${context.genInfo.version}
+ * @作者： ${context.genInfo.createUser}
+ * @日期： ${context.genInfo.createDate}
+ */
+@Data
+@ApiModel
+public class $!{context.className}CrForm  {
+#foreach($field in ${context.tableModel.fields})
+#foreach($relField in ${context.formDataList})
+    #set($Name=${field.field})
+    #set($fieldName=${field.fieldName})
+    #if(${relField.vModel}==${Name})
+
+    /**
+     * ${fieldName}
+     */
+    @ApiModelProperty(value = "${fieldName}")
+    #set($type=${field.dataType.toLowerCase()})
+     #if(${type}=='varchar'|| ${type}=='text'|| ${type}=='longtext' )
+     #set($type="String")
+     #elseif(${type}=='bigint'||${type}=='long'|| ${type}=='datetime' || ${type}=='date')
+     #if(${relField.config.boosKey}=='createTime'||${relField.config.boosKey}=='modifyTime')
+     #set($type="String")
+     #else
+     #set($type="Long")
+     #end
+     #elseif(${type}=='int'||${type}=='number')
+     #set($type="Integer")
+     #elseif(${type}=='decimal')
+     #set($type="BigDecimal")
+     #else
+     #set($type="String")
+     #end
+    private ${type} ${context.genInfo.toLowerAttr(${Name})};
+    #end
+#end
+#end
+#foreach($subfield in ${context.subtables})
+#foreach($relField in ${context.formDataList})
+    #if(${relField.config.children})
+        #if(${relField.config.tableName}==${subfield.subKey})
+            #set($ChildName="${context.genInfo.toUpperAttr(${subfield.subValue})}")
+            #set($childName="${context.genInfo.toLowerAttr(${subfield.subValue})}")
+
+    /**
+     * 子表数据
+     */
+    @ApiModelProperty(value = "子表数据")
+    private List<${ChildName}Entity> ${childName}EntityList;
+        #end
+    #end
+    #end
+#end
+}

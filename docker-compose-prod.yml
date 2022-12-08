@@ -1,0 +1,247 @@
+version: '2'
+services:
+  booster-mysql-prod:
+    build:
+      context: ./db/mysql
+      args:
+        CONFIG_FILE: mysql-prod.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    restart: always
+    container_name: booster-mysql-prod
+    hostname: booster-mysql
+    networks:
+      - booster-cloud
+    image: booster-mysql-prod
+    volumes:
+      - /home/mysql_data:/var/lib/mysql
+    ports:
+      - 13306:3306
+
+  booster-redis-prod:
+    image: bitnami/redis:7.0
+    environment:
+      - REDIS_PASSWORD=root
+    restart: always
+    container_name: booster-redis-prod
+    hostname: booster-redis
+    networks:
+      - booster-cloud
+    ports:
+      - 16379:6379
+
+  booster-minio-prod:
+    image: minio/minio
+    restart: always
+    container_name: booster-minio-prod
+    hostname: booster-minio
+    networks:
+      - booster-cloud
+    command: server /data --console-address ":9001"
+    volumes:
+      - ./minio_data:/data
+      - ./minio_config:/root/.minio
+    environment:
+      - MINIO_DOMAIN=booster-minio
+      - MINIO_ROOT_USER=booster_cloud
+      - MINIO_ROOT_PASSWORD=booster_cloud
+    ports:
+      - 19000:9000
+      - 19001:9001
+
+  booster-register-prod:
+    build:
+      context: ./booster-register
+    restart: always
+    container_name: booster-register-prod
+    hostname: booster-register
+    networks:
+      - booster-cloud
+    image: booster-register-prod
+    ports:
+      - 18848:8848
+
+  booster-gateway-prod:
+    build:
+      context: ./booster-gateway
+    restart: always
+    container_name: booster-gateway-prod
+    hostname: booster-gateway
+    networks:
+      - booster-cloud
+    image: booster-gateway-prod
+    ports:
+      - 19999:9999
+
+  booster-auth-prod:
+    build:
+      context: ./booster-auth
+    restart: always
+    container_name: booster-auth-prod
+    hostname: booster-auth
+    networks:
+      - booster-cloud
+    image: booster-auth-prod
+    ports:
+      - 13000:3000
+
+  booster-upms-prod:
+    build:
+      context: ./booster-upms/booster-upms-biz
+    restart: always
+    container_name: booster-upms-prod
+    hostname: booster-upms
+    networks:
+      - booster-cloud
+    image: booster-upms-prod
+
+  booster-monitor-prod:
+    build:
+      context: ./booster-visual/booster-monitor
+    restart: always
+    container_name: booster-monitor-prod
+    hostname: booster-monitor
+    networks:
+      - booster-cloud
+    image: booster-monitor-prod
+    ports:
+      - 15001:5001
+
+  booster-sentinel-prod:
+    build:
+      context: ./booster-visual/booster-sentinel-dashboard
+    restart: always
+    image: booster-sentinel-prod
+    container_name: booster-sentinel-prod
+    hostname: booster-sentinel
+    networks:
+      - booster-cloud
+    ports:
+      - 15003:5003
+
+  booster-job-prod:
+    build:
+      context: ./booster-visual/booster-xxl-job-admin
+    restart: always
+    container_name: booster-job-prod
+    hostname: booster-job
+    networks:
+      - booster-cloud
+    image: booster-job-prod
+    ports:
+      - 15004:5004
+
+  booster-visualdev-prod:
+    build:
+      context: ./booster-visual/booster-visualdev/booster-visualdev-biz
+    restart: always
+    container_name: booster-visualdev-prod
+    hostname: booster-visualdev
+    networks:
+      - booster-cloud
+    image: booster-visualdev-prod
+    volumes:
+      - ./static-resources:/usr/lib/java/booster-upms/static-resources
+
+  booster-workflow-prod:
+    build:
+      context: ./booster-visual/booster-workflow/booster-workflow-biz
+    restart: always
+    container_name: booster-workflow-prod
+    hostname: booster-workflow
+    networks:
+      - booster-cloud
+    image: booster-workflow-prod
+    volumes:
+      - ./static-resources:/usr/lib/java/booster-upms/static-resources
+
+  booster-report-prod:
+    build:
+      context: ./booster-visual/booster-datareport/booster-report-console
+    restart: always
+    container_name: booster-report-prod
+    hostname: booster-report
+    networks:
+      - booster-cloud
+    image: booster-report-prod
+    volumes:
+      - ./static-resources:/usr/lib/java/booster-upms/static-resources
+
+  booster-infection-prod:
+    build:
+      context: ./booster-infection/booster-infection-biz
+    restart: always
+    container_name: booster-infection-prod
+    hostname: booster-infection
+    networks:
+      - booster-cloud
+    image: booster-infection-prod
+    volumes:
+      - ./static-resources:/usr/lib/java/booster-upms/static-resources
+
+  booster-seata-prod:
+    build:
+      context: ./booster-seata/seata-server
+    restart: always
+    container_name: booster-seata-prod
+    hostname: booster-seata
+    depends_on:
+      - booster-mysql-prod
+      - booster-register-prod
+    networks:
+      - booster-cloud
+    image: booster-seata-prod
+    ports:
+      - 18091:8091
+
+  booster-seata-demo-account-prod:
+    build:
+      context: ./booster-seata-demo/booster-seata-demo-account
+    restart: always
+    container_name: booster-seata-demo-account-prod
+    hostname: booster-seata-demo-account
+    depends_on:
+      - booster-seata-prod
+      - booster-mysql-prod
+      - booster-register-prod
+    networks:
+      - booster-cloud
+    image: booster-seata-demo-account-prod
+    ports:
+      - 18082:8082
+
+  booster-seata-demo-order-prod:
+    build:
+      context: ./booster-seata-demo/booster-seata-demo-order
+    restart: always
+    container_name: booster-seata-demo-order-prod
+    hostname: booster-seata-demo-order
+    depends_on:
+      - booster-seata-prod
+      - booster-mysql-prod
+      - booster-register-prod
+    networks:
+      - booster-cloud
+    image: booster-seata-demo-order-prod
+    ports:
+      - 18083:8083
+
+  booster-seata-demo-storage-prod:
+    build:
+      context: ./booster-seata-demo/booster-seata-demo-storage
+    restart: always
+    container_name: booster-seata-demo-storage-prod
+    hostname: booster-seata-demo-storage
+    depends_on:
+      - booster-seata-prod
+      - booster-mysql-prod
+      - booster-register-prod
+    networks:
+      - booster-cloud
+    image: booster-seata-demo-storage-prod
+    ports:
+      - 18084:8084
+
+networks:
+  booster-cloud:
+    external: true

@@ -1,0 +1,72 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: booster-seata-demo-order
+  cloud:
+    nacos:
+      discovery:
+        #nacos服务地址
+        server-addr: ${NACOS_HOST:booster-register}:${NACOS_PORT:8848}
+        #nacos命名空间ID
+        namespace:
+    alibaba:
+      seata:
+        #事务群组，要和下方vgroup-mapping保持一致（可以每个应用独立取名，也可以使用相同的名字），要与服务端nacos-config.txt中service.vgroup_mapping中存在,并且要保证多个群组情况下后缀名要保持一致-tx_group
+        tx-service-group: my_test_tx_group
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://booster-mysql:3306/booster_seata_demo_order?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+
+seata:
+  application-id: ${spring.application.name}
+  #事务群组（可以每个应用独立取名，也可以使用相同的名字），要与服务端nacos-config.txt中service.vgroup_mapping中存在,并且要保证多个群组情况下后缀名要保持一致-tx_group
+  service:
+    vgroup-mapping:
+      my_test_tx_group: default
+
+  registry:
+    type: nacos
+    nacos:
+      server-addr: ${spring.cloud.nacos.discovery.server-addr}
+      username: nacos
+      password: nacos
+      #seata分组名称
+      group: SEATA_GROUP
+      #nacos命名空间ID
+      namespace:
+      #seata服务名
+      application: seata-server
+
+  config:
+    type: nacos
+    nacos:
+      server-addr: ${spring.cloud.nacos.discovery.server-addr}
+      username: nacos
+      password: nacos
+      #seata分组名称
+      group: SEATA_GROUP
+      #dataId: seataServer.yml
+      #nacos命名空间ID
+      namespace:
+      #nacos中seata配置
+      dataId: seataServer
+
+
+
+# feign组件超时设置，用于查看seata数据库中的临时数据内容
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 30000
+        read-timeout: 30000
+
+management:
+  health:
+    redis:
+      enabled: false

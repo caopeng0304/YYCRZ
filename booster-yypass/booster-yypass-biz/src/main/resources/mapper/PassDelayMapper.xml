@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinosoft.ie.booster.yypass.mapper.PassDelayMapper">
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.sinosoft.ie.booster.yypass.entity.PassDelayEntity">
+                    <id column="id" property="id" />
+                    <result column="pass_basic_info_id" property="passBasicInfoId" />
+                    <result column="delay_to_time" property="delayToTime" />
+                    <result column="reason" property="reason" />
+			<result column="add_time" property="addTime" />
+			<result column="add_person_id" property="addPersonId" />
+			<result column="add_person_name" property="addPersonName" />
+                    <result column="delay_state" property="delayState" />
+			<result column="is_delete" property="isDelete" />
+			<result column="delay_start_time" property="delayToTime" />
+        </resultMap>
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                id, pass_basic_info_id, delay_to_time, reason, add_time,add_person_id,add_person_name,delay_state,is_delete,delay_start_time
+        </sql>
+
+
+
+
+
+</mapper>

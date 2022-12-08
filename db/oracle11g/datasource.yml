@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: root
+    password: root
+    url: jdbc:oracle:thin:@192.168.2.140:11521:xe

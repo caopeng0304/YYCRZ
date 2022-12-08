@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormOrderEntryMapper">
+
+  <resultMap id="formOrderEntryMap" type="com.sinosoft.ie.booster.workflow.entity.FormOrderEntryEntity">
+                  <id property="id" column="id"/>
+                        <result property="orderId" column="order_id"/>
+                        <result property="goodsId" column="goods_id"/>
+                        <result property="goodsCode" column="goods_code"/>
+                        <result property="goodsName" column="goods_name"/>
+                        <result property="specifications" column="specifications"/>
+                        <result property="unit" column="unit"/>
+                        <result property="qty" column="qty"/>
+                        <result property="price" column="price"/>
+                        <result property="amount" column="amount"/>
+                        <result property="discount" column="discount"/>
+                        <result property="cess" column="cess"/>
+                        <result property="actualPrice" column="actual_price"/>
+                        <result property="actualAmount" column="actual_amount"/>
+                        <result property="description" column="description"/>
+                        <result property="sort" column="sort"/>
+            </resultMap>
+</mapper>

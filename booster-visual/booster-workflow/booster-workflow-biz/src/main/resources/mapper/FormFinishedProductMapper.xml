@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormFinishedProductMapper">
+
+	<resultMap id="formFinishedProductMap" type="com.sinosoft.ie.booster.workflow.entity.FormFinishedProductEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="warehouseName" column="warehouse_name"/>
+		<result property="warehouse" column="warehouse"/>
+		<result property="description" column="description"/>
+		<result property="reservoirDate" column="reservoir_date"/>
+	</resultMap>
+</mapper>

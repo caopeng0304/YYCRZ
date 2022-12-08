@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormMaterialRequisitionMapper">
+
+	<resultMap id="formMaterialRequisitionMap" type="com.sinosoft.ie.booster.workflow.entity.FormMaterialRequisitionEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="leadPeople" column="lead_people"/>
+		<result property="leadDepartment" column="lead_department"/>
+		<result property="leadDate" column="lead_date"/>
+		<result property="warehouse" column="warehouse"/>
+		<result property="description" column="description"/>
+	</resultMap>
+</mapper>

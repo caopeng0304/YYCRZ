@@ -1,0 +1,14 @@
+package com.sinosoft.ie.booster.visualdev.model.onlinedev;
+
+
+import com.sinosoft.ie.booster.common.core.model.Pagination;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class PaginationModelExport extends Pagination {
+	private String selectKey;
+	private String json;
+	private String dataType;
+}

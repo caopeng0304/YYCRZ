@@ -1,0 +1,29 @@
+#set($name = "${context.className.toLowerCase()}")
+#set($pKeyName =${context.pKeyName.toLowerCase()})
+#set($peimaryKeyName = "${context.genInfo.toUpperAttr(${pKeyName})}")
+#set($peimaryKeyname = "${context.genInfo.toLowerAttr(${pKeyName})}")
+package ${context.packageName}.model.$!{name};
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ *
+ * ${context.genInfo.description}
+ * @版本： ${context.genInfo.version}
+ * @作者： ${context.genInfo.createUser}
+ * @日期： ${context.genInfo.createDate}
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ApiModel
+public class $!{context.className}UpForm extends $!{context.className}CrForm{
+
+    /**
+     * 主键
+     */
+    @ApiModelProperty(value = "主键")
+    private String $!{peimaryKeyname};
+}

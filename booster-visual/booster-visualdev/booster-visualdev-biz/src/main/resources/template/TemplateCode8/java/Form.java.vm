@@ -1,0 +1,51 @@
+#set($moduleName = "${context.genInfo.className.toLowerCase()}")
+package ${context.packageName}.model.${moduleName};
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import java.util.Date;
+import java.util.List;
+import java.math.BigDecimal;
+#foreach($html in ${context.children})
+import ${context.packageName}.model.${moduleName}.${html.className}Model;
+#end
+
+/**
+ *
+ * ${context.genInfo.description}
+ * 版本: ${context.genInfo.version}
+ * 作者： ${context.genInfo.createUser}
+ * 日期： ${context.genInfo.createDate}
+ */
+@Data
+@ApiModel(value = "${context.genInfo.description}")
+public class ${context.className}Form  {
+
+    #foreach($fieLdsModel in ${context.fields})
+        #set($html = $fieLdsModel.formColumnModel.fieLdsModel)
+        #set($vModel = "${html.vModel}")
+        #set($config = $html.config)
+        #set($boosKey = "${config.boosKey}")
+        #set($fieldName=${config.label})
+    /**
+     * ${fieldName}
+     */
+    @ApiModelProperty(value = "${fieldName}")
+        #if(${boosKey}!='BOOSText' && ${boosKey}!='divider')
+            #if(${boosKey}=='slider'||${boosKey}=='rate')
+                #set($type="Integer")
+            #elseif(${boosKey}=='date')
+                #set($type="long")
+            #else
+                #set($type="String")
+            #end
+    private ${type} ${context.genInfo.toLowerAttr(${vModel})};
+
+        #end
+    #end
+    #foreach($html in ${context.children})
+        #set($className = "${html.className.substring(0,1).toLowerCase()}${html.className.substring(1)}")
+    private List<${html.className}Model> ${className}List;
+    #end
+}

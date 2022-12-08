@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinosoft.ie.booster.taskflow.demo.mapper.TaskFromMapper">
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.sinosoft.ie.booster.taskflow.demo.entity.TaskFromEntity">
+                    <id column="id" property="id" />
+                    <result column="manage_unit" property="manageUnit" />
+                    <result column="maintain_unit" property="maintainUnit" />
+                    <result column="task_type" property="taskType" />
+                    <result column="task_number" property="taskNumber" />
+                    <result column="project_name" property="projectName" />
+                    <result column="project_position" property="projectPosition" />
+                    <result column="road_code" property="roadCode" />
+                    <result column="road_name" property="roadName" />
+                    <result column="start_station" property="startStation" />
+                    <result column="end_station" property="endStation" />
+                    <result column="task_source" property="taskSource" />
+                    <result column="task_source_num" property="taskSourceNum" />
+                    <result column="issue_cost" property="issueCost" />
+                    <result column="task_describe" property="taskDescribe" />
+                    <result column="sign_status" property="signStatus" />
+                    <result column="task_status" property="taskStatus" />
+                    <result column="task_require" property="taskRequire" />
+                    <result column="complete_time_limit" property="completeTimeLimit" />
+                    <result column="del_flag" property="delFlag" />
+                    <result column="create_time" property="createTime" />
+                    <result column="create_by" property="createBy" />
+                    <result column="update_time" property="updateTime" />
+                    <result column="update_by" property="updateBy" />
+        </resultMap>
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                id, manage_unit, maintain_unit, task_type, task_number, project_name, project_position, road_code, road_name, start_station, end_station, task_source, task_source_num, issue_cost, task_describe, sign_status, task_status, task_require, complete_time_limit, del_flag, create_time, create_by, update_time, update_by
+        </sql>
+</mapper>

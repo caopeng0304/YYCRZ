@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+            http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.sinosoft</groupId>
+        <artifactId>booster-datareport</artifactId>
+        <version>1.0.1</version>
+    </parent>
+
+    <artifactId>booster-report-console</artifactId>
+	<description>booster cloud gen</description>
+
+    <dependencies>
+		<!--common-visualdev 模块-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-visualdev</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-report-core</artifactId>
+			<version>${booster.cloud.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-report-font</artifactId>
+			<version>${booster.cloud.version}</version>
+		</dependency>
+		<!--必备：安全模块-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-security</artifactId>
+		</dependency>
+		<!--必备：日志处理-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-log</artifactId>
+		</dependency>
+		<!--必备：swagger-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-swagger</artifactId>
+		</dependency>
+		<!--必备: 注册中心客户端-->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+		</dependency>
+		<!--必备: 配置中心客户端-->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+		</dependency>
+		<!--必备：undertow容器-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-undertow</artifactId>
+		</dependency>
+    </dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>Gaojie</name>
+			<email>@bstek.com</email>
+			<organization>Bstek</organization>
+			<organizationUrl>http://www.bstek.com</organizationUrl>
+		</developer>
+	</developers>
+	<scm>
+		<connection>https://github.com/youseries/ureport.git</connection>
+		<developerConnection>https://github.com/youseries/ureport.git</developerConnection>
+		<url>https://github.com/youseries/ureport</url>
+	</scm>
+	<organization>
+		<name>Bstek</name>
+		<url>http://www.bstek.com</url>
+	</organization>
+	<url>https://github.com/youseries/ureport/tree/master/ureport2-console</url>
+
+</project>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>booster-cloud</artifactId>
+		<groupId>com.sinosoft</groupId>
+		<version>1.0.1</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>booster-common</artifactId>
+	<packaging>pom</packaging>
+	<description>booster 公共聚合模块</description>
+
+	<modules>
+		<module>booster-common-core</module>
+		<module>booster-common-swagger</module>
+		<module>booster-common-feign</module>
+		<module>booster-common-security</module>
+		<module>booster-common-log</module>
+		<module>booster-common-mybatis</module>
+		<module>booster-common-job</module>
+		<module>booster-common-test</module>
+        <module>booster-common-minio</module>
+		<module>booster-common-visualdev</module>
+		<module>booster-common-database</module>
+		<module>booster-common-encrypt</module>
+		<module>booster-common-risk</module>
+	</modules>
+
+</project>

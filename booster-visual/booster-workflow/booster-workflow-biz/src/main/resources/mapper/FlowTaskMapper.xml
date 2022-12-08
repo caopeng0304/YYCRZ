@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FlowTaskMapper">
+
+	<resultMap id="flowTaskMap" type="com.sinosoft.ie.booster.workflow.entity.FlowTaskEntity">
+		<id property="id" column="id"/>
+		<result property="processId" column="process_id"/>
+		<result property="encode" column="encode"/>
+		<result property="fullName" column="full_name"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowCode" column="flow_code"/>
+		<result property="flowName" column="flow_name"/>
+		<result property="flowType" column="flow_type"/>
+		<result property="flowCategory" column="flow_category"/>
+		<result property="flowForm" column="flow_form"/>
+		<result property="flowFormContentJson" column="flow_form_content_json"/>
+		<result property="flowTemplateJson" column="flow_template_json"/>
+		<result property="flowVersion" column="flow_version"/>
+		<result property="startTime" column="start_time"/>
+		<result property="endTime" column="end_time"/>
+		<result property="thisStep" column="this_step"/>
+		<result property="thisStepId" column="this_step_id"/>
+		<result property="grade" column="grade"/>
+		<result property="status" column="status"/>
+		<result property="completion" column="completion"/>
+		<result property="description" column="description"/>
+		<result property="sort" column="sort"/>
+		<result property="enabledFlag" column="enabled_flag"/>
+		<result property="delFlag" column="del_flag"/>
+		<result property="createTime" column="create_time"/>
+		<result property="createBy" column="create_by"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="updateBy" column="update_by"/>
+	</resultMap>
+
+	<resultMap id="WaitList" type="com.sinosoft.ie.booster.workflow.model.flowtask.FlowTaskWaitListModel">
+		<id column="id" property="id"/>
+		<result column="process_id" property="processId"/>
+		<result column="encode" property="enCode"/>
+		<result column="full_name" property="fullName"/>
+		<result column="flow_urgent" property="flowUrgent"/>
+		<result column="flow_id" property="flowId"/>
+		<result column="flow_code" property="flowCode"/>
+		<result column="flow_name" property="flowName"/>
+		<result column="flow_category" property="flowCategory"/>
+		<result column="start_time" property="startTime"/>
+		<result column="end_time" property="endTime"/>
+		<result column="this_step" property="thisStep"/>
+		<result column="this_step_id" property="thisStepId"/>
+		<result column="status" property="status"/>
+		<result column="completion" property="completion"/>
+		<result column="create_by" property="createBy"/>
+		<result column="create_time" property="createTime"/>
+		<result column="handle_id" property="handleId"/>
+		<result column="update_by" property="updateBy"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="node_property_json" property="nodePropertyJson"/>
+	</resultMap>
+
+	<select id="getTrialList" parameterType="map" resultMap="flowTaskMap">
+		SELECT  r.id, t.process_id, t.encode,t.start_time, t.full_name, t.flow_urgent, t.flow_id , t.flow_code , t.flow_name,
+				t.flow_category, t.end_time, r.node_name AS this_step, r.node_code AS this_step_id, r.handle_status AS status,
+				t.completion, t.create_by, r.handle_time AS create_time, t.update_by, t.update_time FROM flow_task t left join
+																										 flow_task_operator_record r on r.task_id = t.id WHERE 1=1 AND (r.handle_status = 0 OR r.handle_status = 1) AND r.task_operator_id is not null
+																																						   AND r.handle_id = #{map.handleId} ${map.sql}
+	</select>
+
+	<select id="getCirculateList" parameterType="String" resultMap="flowTaskMap">
+		SELECT t.id, t.process_id,t.encode, t.full_name, t.flow_urgent, t.flow_id , t.flow_code , t.flow_name, t.flow_category,
+			   t.start_time, t.end_time, c.node_name AS this_step, c.node_code AS this_step_id, t.status, t.completion, t.create_by,
+			   c.create_time, t.update_by, t.update_time FROM flow_task t left join flow_task_circulate c on c.task_id = t.id WHERE 1=1 ${sql}
+	</select>
+
+	<select id="getWaitList" parameterType="String" resultMap="WaitList">
+		SELECT o.id, t.process_id, t.encode, t.full_name, t.flow_urgent, t.flow_id , t.flow_code ,t.flow_name, t.flow_category,
+			   t.start_time, t.end_time, t.this_step, t.this_step_id, t.status, t.completion, t.create_by, o.create_time, o.handle_id, t.update_by,
+			   t.update_time, n.node_property_json FROM flow_task_operator o left join flow_task t on o.task_id = t.id left join flow_task_node n on o.task_node_id = n.id
+		WHERE 1=1 AND o.completion = 0 AND t.status = 1 AND o.state = '0'  ${sql}
+	</select>
+</mapper>

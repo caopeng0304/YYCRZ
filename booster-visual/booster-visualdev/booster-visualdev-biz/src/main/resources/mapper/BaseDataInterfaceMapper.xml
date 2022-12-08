@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.visualdev.mapper.BaseDataInterfaceMapper">
+
+  <resultMap id="baseDataInterfaceMap" type="com.sinosoft.ie.booster.visualdev.entity.BaseDataInterfaceEntity">
+                  <id property="id" column="id"/>
+                        <result property="fullName" column="full_name"/>
+                        <result property="encode" column="encode"/>
+                        <result property="description" column="description"/>
+                        <result property="categoryId" column="category_id"/>
+                        <result property="path" column="path"/>
+                        <result property="requestMethod" column="request_method"/>
+                        <result property="responseType" column="response_type"/>
+                        <result property="query" column="query"/>
+                        <result property="requestParameters" column="request_parameters"/>
+                        <result property="responseParameters" column="response_parameters"/>
+                        <result property="dbLinkId" column="db_link_id"/>
+                        <result property="dataType" column="data_type"/>
+                        <result property="sort" column="sort"/>
+                        <result property="enabledFlag" column="enabled_flag"/>
+                        <result property="delFlag" column="del_flag"/>
+                        <result property="createTime" column="create_time"/>
+                        <result property="createBy" column="create_by"/>
+                        <result property="updateTime" column="update_time"/>
+                        <result property="updateBy" column="update_by"/>
+            </resultMap>
+</mapper>

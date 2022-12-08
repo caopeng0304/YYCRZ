@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormContractApprovalSheetMapper">
+
+	<resultMap id="formContractApprovalSheetMap"
+			   type="com.sinosoft.ie.booster.workflow.entity.FormContractApprovalSheetEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="applyUser" column="apply_user"/>
+		<result property="applyDate" column="apply_date"/>
+		<result property="contractId" column="contract_id"/>
+		<result property="contractNum" column="contract_num"/>
+		<result property="firstParty" column="first_party"/>
+		<result property="secondParty" column="second_party"/>
+		<result property="contractName" column="contract_name"/>
+		<result property="contractType" column="contract_type"/>
+		<result property="personCharge" column="person_charge"/>
+		<result property="leadDepartment" column="lead_department"/>
+		<result property="signArea" column="sign_area"/>
+		<result property="incomeAmount" column="income_amount"/>
+		<result property="totalExpenditure" column="total_expenditure"/>
+		<result property="contractPeriod" column="contract_period"/>
+		<result property="paymentMethod" column="payment_method"/>
+		<result property="budgetaryApproval" column="budgetary_approval"/>
+		<result property="startContractDate" column="start_contract_date"/>
+		<result property="endContractDate" column="end_contract_date"/>
+		<result property="fileJson" column="file_json"/>
+		<result property="contractContent" column="contract_content"/>
+	</resultMap>
+</mapper>

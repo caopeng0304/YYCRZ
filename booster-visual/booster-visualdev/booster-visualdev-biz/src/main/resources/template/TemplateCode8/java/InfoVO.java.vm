@@ -1,0 +1,64 @@
+#set($moduleName = "${context.genInfo.className.toLowerCase()}")
+package ${context.packageName}.model.${moduleName};
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import java.util.Date;
+import java.util.List;
+import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonFormat;
+#foreach($html in ${context.children})
+import ${context.packageName}.model.${moduleName}.${html.className}Model;
+#end
+
+/**
+ *
+ * ${context.genInfo.description}
+ * 版本: ${context.genInfo.version}
+ * 作者： ${context.genInfo.createUser}
+ * 日期： ${context.genInfo.createDate}
+ */
+@Data
+@ApiModel(value = "${context.genInfo.description}")
+public class ${context.className}InfoVO  {
+
+    #foreach($fieLdsModel in ${context.fields})
+        #set($html = $fieLdsModel.formColumnModel.fieLdsModel)
+        #set($vModel = "${html.vModel}")
+        #set($config = $html.config)
+        #set($boosKey = "${config.boosKey}")
+        #set($fieldName=${config.label})
+    /**
+     * ${fieldName}
+     */
+    @ApiModelProperty(value = "${fieldName}")
+        #if(${boosKey}!='BOOSText' && ${boosKey}!='divider')
+            #if(${boosKey}=='slider'||${boosKey}=='rate')
+    private Integer ${context.genInfo.toLowerAttr(${vModel})};
+
+            #elseif(${boosKey}=='modifyTime')
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date ${context.genInfo.toLowerAttr(${vModel})};
+
+            #elseif(${boosKey}=='createTime')
+                @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+                private Date ${context.genInfo.toLowerAttr(${vModel})};
+
+            #elseif(${boosKey}=='date')
+    private long ${context.genInfo.toLowerAttr(${vModel})};
+
+            #else
+    private String ${context.genInfo.toLowerAttr(${vModel})};
+
+            #end
+        #end
+    #end
+    #foreach($html in ${context.children})
+        #set($className = "${html.className.substring(0,1).toLowerCase()}${html.className.substring(1)}")
+    private List<${html.className}Model> ${className}List;
+
+    #end
+    #set($peimaryKeyName = "${context.pKeyName}")
+    private String ${peimaryKeyName};
+}

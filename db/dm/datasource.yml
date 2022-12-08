@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: dm.jdbc.driver.DmDriver
+    username: SYSDBA
+    password: SYSDBA123
+    url: jdbc:dm://192.168.2.140:5236

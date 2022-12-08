@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormConBillingMapper">
+
+	<resultMap id="formConBillingMap" type="com.sinosoft.ie.booster.workflow.entity.FormConBillingEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="drawer" column="drawer"/>
+		<result property="billDate" column="bill_date"/>
+		<result property="companyName" column="company_name"/>
+		<result property="conName" column="con_name"/>
+		<result property="bank" column="bank"/>
+		<result property="amount" column="amount"/>
+		<result property="billAmount" column="bill_amount"/>
+		<result property="taxId" column="tax_id"/>
+		<result property="invoiceId" column="invoice_id"/>
+		<result property="invoAddress" column="invo_address"/>
+		<result property="payAmount" column="pay_amount"/>
+		<result property="fileJson" column="file_json"/>
+		<result property="description" column="description"/>
+	</resultMap>
+</mapper>

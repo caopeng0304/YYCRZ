@@ -1,0 +1,271 @@
+version: '2'
+services:
+  booster-mysql:
+    build:
+      context: ./db/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    restart: always
+    container_name: booster-mysql
+    hostname: booster-mysql
+    image: booster-mysql
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    network_mode: host
+
+  booster-redis:
+    image: bitnami/redis:7.0
+    environment:
+      - REDIS_PASSWORD=root
+    restart: always
+    container_name: booster-redis
+    hostname: booster-redis
+    ports:
+      - 6379:6379
+    network_mode: host
+
+  booster-minio:
+    image: minio/minio
+    restart: always
+    container_name: booster-minio
+    hostname: booster-minio
+    command: server /data --console-address ":9001"
+    volumes:
+      - ./minio_data:/data
+      - ./minio_config:/root/.minio
+    environment:
+      - MINIO_DOMAIN=booster-minio
+      - MINIO_ROOT_USER=booster_cloud
+      - MINIO_ROOT_PASSWORD=booster_cloud
+    ports:
+      - 9000:9000
+      - 9001:9001
+    network_mode: host
+
+  booster-register:
+    build:
+      context: ./booster-register
+    environment:
+      JAVA_OPTS: -Xms512m -Xmx512m -Djava.security.egd=file:/dev/./urandom
+    restart: always
+    container_name: booster-register
+    hostname: booster-register
+    image: booster-register
+    ports:
+      - 8848:8848
+    network_mode: host
+
+  booster-gateway:
+    build:
+      context: ./booster-gateway
+    restart: always
+    container_name: booster-gateway
+    hostname: booster-gateway
+    image: booster-gateway
+    ports:
+      - 9999:9999
+    network_mode: host
+
+  booster-auth:
+    build:
+      context: ./booster-auth
+    restart: always
+    container_name: booster-auth
+    hostname: booster-auth
+    image: booster-auth
+    ports:
+      - 3000:3000
+    network_mode: host
+
+  booster-upms:
+    build:
+      context: ./booster-upms/booster-upms-biz
+    environment:
+      JAVA_OPTS: -Xms512m -Xmx512m -Djava.security.egd=file:/dev/./urandom
+    restart: always
+    container_name: booster-upms
+    hostname: booster-upms
+    image: booster-upms
+    ports:
+      - 4000:4000
+    network_mode: host
+
+  booster-sentinel:
+    build:
+      context: ./booster-visual/booster-sentinel-dashboard
+    restart: always
+    image: booster-sentinel
+    container_name: booster-sentinel
+    hostname: booster-sentinel
+    ports:
+      - 5003:5003
+    network_mode: host
+
+  booster-job:
+    build:
+      context: ./booster-visual/booster-xxl-job-admin
+    restart: always
+    container_name: booster-job
+    hostname: booster-job
+    image: booster-job
+    ports:
+      - 5004:5004
+    network_mode: host
+
+  booster-visualdev:
+    build:
+      context: ./booster-visual/booster-visualdev/booster-visualdev-biz
+    restart: always
+    container_name: booster-visualdev
+    hostname: booster-visualdev
+    image: booster-visualdev
+    volumes:
+      - ./static-resources:/usr/lib/java/booster-upms/static-resources
+    ports:
+      - 5006:5006
+    network_mode: host
+
+  booster-workflow:
+    build:
+      context: ./booster-visual/booster-workflow/booster-workflow-biz
+    restart: always
+    container_name: booster-workflow
+    hostname: booster-workflow
+    image: booster-workflow
+    volumes:
+      - ./static-resources:/usr/lib/java/booster-upms/static-resources
+    ports:
+      - 5007:5007
+    network_mode: host
+
+  booster-report:
+    build:
+      context: ./booster-visual/booster-datareport/booster-report-console
+    restart: always
+    container_name: booster-report
+    hostname: booster-report
+    image: booster-report
+    volumes:
+      - ./static-resources:/usr/lib/java/booster-upms/static-resources
+    ports:
+      - 5008:5008
+    network_mode: host
+
+  booster-infection:
+    build:
+      context: ./booster-infection/booster-infection-biz
+    restart: always
+    container_name: booster-infection
+    hostname: booster-infection
+    image: booster-infection
+    volumes:
+      - ./static-resources:/usr/lib/java/booster-upms/static-resources
+    ports:
+      - 7000:7000
+    network_mode: host
+
+  booster-mqroute:
+    build:
+      context: ./booster-mqroute/booster-mqroute-biz
+    restart: always
+    container_name: booster-mqroute
+    hostname: booster-mqroute
+    image: booster-mqroute
+    ports:
+      - 7001:7001
+    network_mode: host
+
+  booster-taskflow-demo:
+    build:
+      context: ./booster-taskflow-demo/booster-taskflow-demo-biz
+    restart: always
+    container_name: booster-taskflow-demo
+    hostname: booster-taskflow-demo
+    image: booster-taskflow-demo
+    ports:
+      - 7002:7002
+    network_mode: host
+
+  booster-taskflow-app-demo:
+    build:
+      context: ./booster-taskflow-app-demo/booster-taskflow-app-demo-biz
+    restart: always
+    container_name: booster-taskflow-app-demo
+    hostname: booster-taskflow-app-demo
+    image: booster-taskflow-app-demo
+    ports:
+      - 7003:7003
+    network_mode: host
+
+  booster-seata:
+    build:
+      context: ./booster-seata/seata-server
+    restart: always
+    container_name: booster-seata
+    hostname: booster-seata
+    depends_on:
+      - booster-mysql
+      - booster-register
+    image: booster-seata
+    ports:
+      - 8091:8091
+    network_mode: host
+
+  booster-seata-demo-account:
+    build:
+      context: ./booster-seata-demo/booster-seata-demo-account
+    restart: always
+    container_name: booster-seata-demo-account
+    hostname: booster-seata-demo-account
+    depends_on:
+      - booster-seata
+      - booster-mysql
+      - booster-register
+    image: booster-seata-demo-account
+    ports:
+      - 8082:8082
+    network_mode: host
+
+  booster-seata-demo-order:
+    build:
+      context: ./booster-seata-demo/booster-seata-demo-order
+    restart: always
+    container_name: booster-seata-demo-order
+    hostname: booster-seata-demo-order
+    depends_on:
+      - booster-seata
+      - booster-mysql
+      - booster-register
+    image: booster-seata-demo-order
+    ports:
+      - 8083:8083
+    network_mode: host
+
+  booster-seata-demo-storage:
+    build:
+      context: ./booster-seata-demo/booster-seata-demo-storage
+    restart: always
+    container_name: booster-seata-demo-storage
+    hostname: booster-seata-demo-storage
+    depends_on:
+      - booster-seata
+      - booster-mysql
+      - booster-register
+    image: booster-seata-demo-storage
+    ports:
+      - 8084:8084
+    network_mode: host
+
+  booster-fileview:
+    image: keking/kkfileview:v4.0.0
+    restart: always
+    container_name: booster-fileview
+    hostname: booster-fileview
+    environment:
+      - KK_CONTEXT_PATH=/fileview
+      - KK_CACHE_TYPE=default
+    ports:
+      - 8012:8012
+    network_mode: host

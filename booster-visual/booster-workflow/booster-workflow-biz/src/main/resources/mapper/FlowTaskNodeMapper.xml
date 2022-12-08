@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FlowTaskNodeMapper">
+
+	<resultMap id="flowTaskNodeMap" type="com.sinosoft.ie.booster.workflow.entity.FlowTaskNodeEntity">
+		<id property="id" column="id"/>
+		<result property="nodeCode" column="node_code"/>
+		<result property="nodeName" column="node_name"/>
+		<result property="nodeType" column="node_type"/>
+		<result property="nodePropertyJson" column="node_property_json"/>
+		<result property="nodeUp" column="node_up"/>
+		<result property="nodeNext" column="node_next"/>
+		<result property="taskId" column="task_id"/>
+		<result property="state" column="state"/>
+		<result property="completion" column="completion"/>
+		<result property="description" column="description"/>
+		<result property="sort" column="sort"/>
+		<result property="createTime" column="create_time"/>
+	</resultMap>
+
+	<update id="updateState">
+		update flow_task_node set state ='-1' where task_id = #{taskId}
+	</update>
+</mapper>

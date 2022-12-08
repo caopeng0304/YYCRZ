@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinosoft.ie.booster.yypass.mapper.PassLogMapper">
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.sinosoft.ie.booster.yypass.entity.PassLogEntity">
+                    <id column="id" property="id" />
+                    <result column="pass_basic_info_id" property="passBasicInfoId" />
+                    <result column="state" property="state" />
+                    <result column="person_id" property="personId" />
+                    <result column="person_name" property="personName" />
+                    <result column="add_time" property="addTime" />
+			        <result column="descs" property="descs" />
+			<result column="is_delete" property="isDelete" />
+        </resultMap>
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                id, pass_basic_info_id, state, person_id, person_name, add_time,descs,is_delete
+        </sql>
+
+	<select id="selectParmer" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select * from pass_log where 1=1 and is_delete = '1'
+			and pass_basic_info_id = #{passBasicInfoId}
+			AND
+			state in (
+			select pass_log_state from pass_is_power where pass_basic_info_state
+			in (
+			select person_state from pass_basic_info where id = #{passBasicInfoId}
+			)
+			)
+	</select>
+
+	<select id="getRoleCode" resultType="java.lang.String" parameterType="java.lang.String">
+		select role_code from pass_role where state = #{state}
+	</select>
+
+	<select id="getApproval" resultType="java.lang.String" parameterType="com.sinosoft.ie.booster.yypass.model.passbasicinfo.PassBasicInfoPagination">
+          select pass_basic_info_id from pass_log where 1=1
+          and pass_basic_info_id in (
+                 select id from pass_basic_info where 1=1
+				<if test="names != null and names != ''">
+					and names like '%${names}%'
+				</if>
+				<if test="isGrantFace != null and isGrantFace != ''">
+					and is_grant_face = #{isGrantFace}
+				</if>
+		<if test="personType != null and personType != ''">
+			and person_type = #{personType}
+		</if>
+		<if test="phone != null and phone != ''">
+			and phone like '%${phone}%'
+		</if>
+		<if test="unitName != null and unitName != ''">
+			and unit_name like '%${unitName}%'
+		</if>
+		<if test="yrName != null and yrName != ''">
+			and yr_name like '%${yrName}%'
+		</if>
+		<if test="yrUnitArr != null and yrUnitArr != ''">
+			and yr_unit_arr like '%${yrUnitArr}%'
+		</if>
+		<if test="yrUnit != null and yrUnit != ''">
+			and yr_unit like '%${yrUnit}%'
+		</if>
+		<if test="startTime1 != null  and endTime1 != null">
+			and start_time BETWEEN #{startTime1} and #{endTime1}
+		</if>
+		<if test="startTime2 != null and endTime2 != null">
+			and end_time BETWEEN #{startTime2} and #{endTime2}
+		</if>
+		<if test="personStatus != null and personStatus != ''">
+			and person_state in
+			<foreach item="item" index="index" collection="personStatus.split(',')"  open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+
+          )
+
+          and state in
+		<if test="personState != null and personState != ''">
+			<foreach item="item" index="index" collection="personState.split(',')"  open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+          and is_delete = '1'
+          GROUP BY pass_basic_info_id
+	</select>
+
+	<select id="getEjdwzgldApproval" resultType="java.lang.String" parameterType="com.sinosoft.ie.booster.yypass.model.passbasicinfo.PassBasicInfoPagination">
+          select pass_basic_info_id from pass_log where 1=1 and unit_id = #{unitId}
+		and pass_basic_info_id in (
+		select id from pass_basic_info where 1=1
+		<if test="names != null and names != ''">
+			and names like '%${names}%'
+		</if>
+		<if test="isGrantFace != null and isGrantFace != ''">
+			and is_grant_face = #{isGrantFace}
+		</if>
+		<if test="personType != null and personType != ''">
+			and person_type = #{personType}
+		</if>
+		<if test="phone != null and phone != ''">
+			and phone like '%${phone}%'
+		</if>
+		<if test="unitName != null and unitName != ''">
+			and unit_name like '%${unitName}%'
+		</if>
+		<if test="yrName != null and yrName != ''">
+			and yr_name like '%${yrName}%'
+		</if>
+		<if test="yrUnitArr != null and yrUnitArr != ''">
+			and yr_unit_arr like '%${yrUnitArr}%'
+		</if>
+		<if test="yrUnit != null and yrUnit != ''">
+			and yr_unit like '%${yrUnit}%'
+		</if>
+		<if test="startTime1 != null  and endTime1 != null">
+			and start_time BETWEEN #{startTime1} and #{endTime1}
+		</if>
+		<if test="startTime2 != null and endTime2 != null">
+			and end_time BETWEEN #{startTime2} and #{endTime2}
+		</if>
+		<if test="personStatus != null and personStatus != ''">
+			and person_state in
+			<foreach item="item" index="index" collection="personStatus.split(',')"  open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		)
+          and state in
+		<if test="personState != null and personState != ''">
+			<foreach item="item" index="index" collection="personState.split(',')"  open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+          and is_delete = '1'
+          GROUP BY pass_basic_info_id
+	</select>
+
+
+	<select id="getYrffzrApproval" resultType="java.lang.String" parameterType="com.sinosoft.ie.booster.yypass.model.passbasicinfo.PassBasicInfoPagination">
+          select pass_basic_info_id from pass_log where unit_id = #{yrUnitArr}
+		and pass_basic_info_id in (
+		select id from pass_basic_info where 1=1
+		<if test="names != null and names != ''">
+			and names like '%${names}%'
+		</if>
+		<if test="isGrantFace != null and isGrantFace != ''">
+			and is_grant_face = #{isGrantFace}
+		</if>
+		<if test="personType != null and personType != ''">
+			and person_type = #{personType}
+		</if>
+		<if test="phone != null and phone != ''">
+			and phone like '%${phone}%'
+		</if>
+		<if test="unitName != null and unitName != ''">
+			and unit_name like '%${unitName}%'
+		</if>
+		<if test="yrName != null and yrName != ''">
+			and yr_name like '%${yrName}%'
+		</if>
+		<if test="yrUnitArr != null and yrUnitArr != ''">
+			and yr_unit_arr like '%${yrUnitArr}%'
+		</if>
+		<if test="yrUnit != null and yrUnit != ''">
+			and yr_unit like '%${yrUnit}%'
+		</if>
+		<if test="startTime1 != null  and endTime1 != null">
+			and start_time BETWEEN #{startTime1} and #{endTime1}
+		</if>
+		<if test="startTime2 != null and endTime2 != null">
+			and end_time BETWEEN #{startTime2} and #{endTime2}
+		</if>
+		<if test="personStatus != null and personStatus != ''">
+			and person_state in
+			<foreach item="item" index="index" collection="personStatus.split(',')"  open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		)
+
+          and state in
+		<if test="personState != null and personState != ''">
+			<foreach item="item" index="index" collection="personState.split(',')"  open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+          and is_delete = '1'
+          GROUP BY pass_basic_info_id
+	</select>
+
+
+	<select id="getRjglyApproval" resultType="java.lang.String" parameterType="com.sinosoft.ie.booster.yypass.model.passbasicinfo.PassBasicInfoPagination">
+         select pass_basic_info_id from pass_log where 1=1 and unit_id like '%${yrUnitArr}%'
+		and pass_basic_info_id in (
+		select id from pass_basic_info where 1=1
+		<if test="names != null and names != ''">
+			and names like '%${names}%'
+		</if>
+		<if test="isGrantFace != null and isGrantFace != ''">
+			and is_grant_face = #{isGrantFace}
+		</if>
+		<if test="personType != null and personType != ''">
+			and person_type = #{personType}
+		</if>
+		<if test="phone != null and phone != ''">
+			and phone like '%${phone}%'
+		</if>
+		<if test="unitName != null and unitName != ''">
+			and unit_name like '%${unitName}%'
+		</if>
+		<if test="yrName != null and yrName != ''">
+			and yr_name like '%${yrName}%'
+		</if>
+		<if test="yrUnitArr != null and yrUnitArr != ''">
+			and yr_unit_arr like '%${yrUnitArr}%'
+		</if>
+		<if test="yrUnit != null and yrUnit != ''">
+			and yr_unit like '%${yrUnit}%'
+		</if>
+		<if test="startTime1 != null  and endTime1 != null">
+			and start_time BETWEEN #{startTime1} and #{endTime1}
+		</if>
+		<if test="startTime2 != null and endTime2 != null">
+			and end_time BETWEEN #{startTime2} and #{endTime2}
+		</if>
+		<if test="personStatus != null and personStatus != ''">
+			and person_state in
+			<foreach item="item" index="index" collection="personStatus.split(',')"  open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		)
+
+          and state in
+		<if test="personState != null and personState != ''">
+			<foreach item="item" index="index" collection="personState.split(',')"  open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+          and is_delete = '1'
+          GROUP BY pass_basic_info_id
+	</select>
+
+
+	<select id="getTopState" resultType="java.lang.String" parameterType="java.lang.String">
+		select state from pass_log where pass_basic_info_id = #{passBasicInfoId}
+				ORDER BY add_time desc
+				limit 1
+	</select>
+
+	<select id="getRepeatList" resultType="java.lang.String" parameterType="java.lang.String">
+		select liucheng from pass_repeat_power where 1=1
+		<if test="list != null and list != ''">
+			and person_state in
+			<if test="list != null and list != ''">
+				<foreach item="item" index="index" collection="list.split(',')"  open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</if>
+	</select>
+
+
+</mapper>

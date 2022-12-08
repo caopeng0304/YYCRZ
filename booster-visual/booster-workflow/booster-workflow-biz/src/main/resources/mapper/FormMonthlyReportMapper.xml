@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormMonthlyReportMapper">
+
+	<resultMap id="formMonthlyReportMap" type="com.sinosoft.ie.booster.workflow.entity.FormMonthlyReportEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="applyUser" column="apply_user"/>
+		<result property="applyDate" column="apply_date"/>
+		<result property="applyDept" column="apply_dept"/>
+		<result property="applyPost" column="apply_post"/>
+		<result property="planEndTime" column="plan_end_time"/>
+		<result property="overallEvaluate" column="overall_evaluate"/>
+		<result property="npWorkMatter" column="np_work_matter"/>
+		<result property="npFinishTime" column="np_finish_time"/>
+		<result property="npFinishMethod" column="np_finish_method"/>
+		<result property="fileJson" column="file_json"/>
+	</resultMap>
+</mapper>

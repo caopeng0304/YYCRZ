@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormProcurementMaterialMapper">
+
+	<resultMap id="formProcurementMaterialMap" type="com.sinosoft.ie.booster.workflow.entity.FormProcurementMaterialEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="applyUser" column="apply_user"/>
+		<result property="departmental" column="departmental"/>
+		<result property="applyDate" column="apply_date"/>
+		<result property="purchaseUnit" column="purchase_unit"/>
+		<result property="deliveryMode" column="delivery_mode"/>
+		<result property="deliveryAddress" column="delivery_address"/>
+		<result property="paymentMethod" column="payment_method"/>
+		<result property="paymentMoney" column="payment_money"/>
+		<result property="fileJson" column="file_json"/>
+		<result property="reason" column="reason"/>
+	</resultMap>
+</mapper>

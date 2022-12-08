@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormWorkContactSheetMapper">
+
+	<resultMap id="formWorkContactSheetMap" type="com.sinosoft.ie.booster.workflow.entity.FormWorkContactSheetEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="drawPeople" column="draw_people"/>
+		<result property="issuingDepartment" column="issuing_department"/>
+		<result property="serviceDepartment" column="service_department"/>
+		<result property="recipients" column="recipients"/>
+		<result property="coordination" column="coordination"/>
+		<result property="fileJson" column="file_json"/>
+		<result property="toDate" column="to_date"/>
+		<result property="collectionDate" column="collection_date"/>
+	</resultMap>
+</mapper>

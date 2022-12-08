@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormSalesSupportMapper">
+
+	<resultMap id="formSalesSupportMap" type="com.sinosoft.ie.booster.workflow.entity.FormSalesSupportEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="applyUser" column="apply_user"/>
+		<result property="applyDate" column="apply_date"/>
+		<result property="applyDept" column="apply_dept"/>
+		<result property="customer" column="customer"/>
+		<result property="project" column="project"/>
+		<result property="pSaleSupInfo" column="p_sale_sup_info"/>
+		<result property="startDate" column="start_date"/>
+		<result property="endDate" column="end_date"/>
+		<result property="pSaleSupDays" column="p_sale_sup_days"/>
+		<result property="pSalePreDays" column="p_sale_pre_days"/>
+		<result property="consulManager" column="consul_manager"/>
+		<result property="pSalSupConsul" column="p_sal_sup_consul"/>
+		<result property="fileJson" column="file_json"/>
+		<result property="salSupConclusion" column="sal_sup_conclusion"/>
+		<result property="consultResult" column="consult_result"/>
+		<result property="iEvaluation" column="i_evaluation"/>
+		<result property="conclusion" column="conclusion"/>
+	</resultMap>
+</mapper>

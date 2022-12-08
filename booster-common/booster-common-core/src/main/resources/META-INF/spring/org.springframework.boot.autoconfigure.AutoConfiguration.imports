@@ -1,0 +1,5 @@
+com.sinosoft.ie.booster.common.core.config.JacksonConfiguration
+com.sinosoft.ie.booster.common.core.config.RedisTemplateConfiguration
+com.sinosoft.ie.booster.common.core.config.RestTemplateConfiguration
+com.sinosoft.ie.booster.common.core.util.SpringContextHolder
+com.sinosoft.ie.booster.common.core.config.WebMvcConfiguration

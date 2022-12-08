@@ -1,0 +1,36 @@
+#set($moduleName = "${context.genInfo.className.toLowerCase()}")
+package ${context.packageName}.model.${moduleName};
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import java.util.List;
+import java.util.Date;
+import java.math.BigDecimal;
+
+/**
+ *
+ * ${context.genInfo.description}
+ * 版本： ${context.genInfo.version}
+ * 作者： ${context.genInfo.createUser}
+ * 日期： ${context.genInfo.createDate}
+ */
+@Data
+@ApiModel(value = "${context.genInfo.description}")
+public class ${context.className}Model  {
+    #foreach($html in ${context.children.childList})
+        #set($boosKey = "${html.fieLdsModel.config.boosKey}")
+        #set($fieldName=${html.fieLdsModel.config.label})
+		#set($vModel = "${html.fieLdsModel.vModel}")
+
+    /**
+     * ${fieldName}
+     */
+    @ApiModelProperty(value = "${fieldName}")
+        #if(${boosKey}=="date")
+    private long  ${context.genInfo.toLowerAttr(${vModel})};
+        #else
+    private String ${context.genInfo.toLowerAttr(${vModel})};
+        #end
+    #end
+}

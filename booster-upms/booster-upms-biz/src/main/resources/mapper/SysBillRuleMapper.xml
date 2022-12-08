@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.admin.mapper.SysBillRuleMapper">
+
+	<resultMap id="billRuleMap" type="com.sinosoft.ie.booster.admin.api.entity.SysBillRuleEntity">
+		<id property="id" column="id"/>
+		<result property="fullName" column="full_name"/>
+		<result property="encode" column="encode"/>
+		<result property="prefix" column="prefix"/>
+		<result property="dateFormat" column="date_format"/>
+		<result property="digit" column="digit"/>
+		<result property="thisNumber" column="this_number"/>
+		<result property="outputNumber" column="output_number"/>
+		<result property="description" column="description"/>
+		<result property="sort" column="sort"/>
+		<result property="createTime" column="create_time"/>
+		<result property="createUser" column="create_user"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="updateUser" column="update_user"/>
+		<result property="delFlag" column="del_flag"/>
+	</resultMap>
+</mapper>

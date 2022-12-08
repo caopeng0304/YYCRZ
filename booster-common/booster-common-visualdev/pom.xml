@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>booster-common</artifactId>
+		<groupId>com.sinosoft</groupId>
+		<version>1.0.1</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>booster-common-visualdev</artifactId>
+	<description>booster 可视化开发公共工具类</description>
+
+	<dependencies>
+		<!-- core 工具类 -->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-core</artifactId>
+		</dependency>
+		<!--upms api、model 模块-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-upms-api</artifactId>
+			<version>${booster.cloud.version}</version>
+		</dependency>
+		<!-- httpcomponents:httpmime -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+		</dependency>
+		<!-- commons-lang -->
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+		</dependency>
+		<!-- easypoi -->
+		<dependency>
+			<groupId>cn.afterturn</groupId>
+			<artifactId>easypoi-base</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

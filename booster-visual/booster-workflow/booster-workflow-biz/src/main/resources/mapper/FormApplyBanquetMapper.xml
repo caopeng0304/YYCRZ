@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormApplyBanquetMapper">
+
+	<resultMap id="formApplyBanquetMap" type="com.sinosoft.ie.booster.workflow.entity.FormApplyBanquetEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="applyUser" column="apply_user"/>
+		<result property="position" column="position"/>
+		<result property="applyDate" column="apply_date"/>
+		<result property="banquetNum" column="banquet_num"/>
+		<result property="banquetPeople" column="banquet_people"/>
+		<result property="total" column="total"/>
+		<result property="place" column="place"/>
+		<result property="expectedCost" column="expected_cost"/>
+		<result property="description" column="description"/>
+	</resultMap>
+</mapper>

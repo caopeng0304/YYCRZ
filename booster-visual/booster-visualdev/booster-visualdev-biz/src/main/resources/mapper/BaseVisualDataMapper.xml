@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.visualdev.mapper.BaseVisualDataMapper">
+
+  <resultMap id="baseVisualDataMap" type="com.sinosoft.ie.booster.visualdev.entity.BaseVisualDataEntity">
+                  <id property="id" column="id"/>
+                        <result property="fullName" column="full_name"/>
+                        <result property="encode" column="encode"/>
+                        <result property="description" column="description"/>
+                        <result property="categoryId" column="category_id"/>
+                        <result property="screenShot" column="screen_shot"/>
+                        <result property="password" column="password"/>
+                        <result property="component" column="component"/>
+                        <result property="detail" column="detail"/>
+                        <result property="copyId" column="copy_id"/>
+                        <result property="sort" column="sort"/>
+                        <result property="enabledFlag" column="enabled_flag"/>
+                        <result property="delFlag" column="del_flag"/>
+                        <result property="createTime" column="create_time"/>
+                        <result property="createBy" column="create_by"/>
+                        <result property="updateTime" column="update_time"/>
+                        <result property="updateBy" column="update_by"/>
+            </resultMap>
+</mapper>

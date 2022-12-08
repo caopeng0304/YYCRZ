@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinosoft.ie.booster.mqroute.mapper.ConsumerMapper">
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.sinosoft.ie.booster.mqroute.entity.ConsumerEntity">
+                    <id column="id" property="id" />
+                    <result column="consumeName" property="consumename" />
+                    <result column="topId" property="topid" />
+                    <result column="createTime" property="createtime" />
+                    <result column="state" property="state" />
+                    <result column="callbackurl" property="callbackurl" />
+        </resultMap>
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                id, consumeName, topId, createTime, state
+        </sql>
+        
+		<resultMap id="BaseResultJoinTopicMap"  extends="BaseResultMap"  type="com.sinosoft.ie.booster.mqroute.model.consumer.ConsumerTopic" >
+			<result column="topicname" property="topicname" />
+		</resultMap>
+        
+        
+       <select id="selectJoinTopic"  resultMap="BaseResultMap"  >
+         select c.*,t.topicname from consumer c  LEFT join  topic  t on  t.id =  c.topid
+        ${ew.customSqlSegment}
+        </select>
+        
+
+        
+</mapper>

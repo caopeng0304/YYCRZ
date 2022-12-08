@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>booster-cloud</artifactId>
+		<groupId>com.sinosoft</groupId>
+		<version>1.0.1</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>booster-sensitive-demo</artifactId>
+	<description>booster-sensitive 隐私字段脱敏样例代码</description>
+
+	<dependencies>
+		<!-- core 工具类 -->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-core</artifactId>
+		</dependency>
+		<!-- mybatis plus extension -->
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-extension</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid-spring-boot-starter</artifactId>
+		</dependency>
+
+		<!--导入加密模块-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-encrypt</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<!--必备：安全模块-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-security</artifactId>
+		</dependency>
+		<!--必备：日志处理-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-log</artifactId>
+		</dependency>
+		<!--必备：swagger-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-swagger</artifactId>
+		</dependency>
+		<!--必备: 注册中心客户端-->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+		</dependency>
+		<!--必备: 配置中心客户端-->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+		</dependency>
+		<!--必备：undertow容器-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-undertow</artifactId>
+		</dependency>
+		<!--可选：mybatis （需要链接数据库开启）-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-mybatis</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

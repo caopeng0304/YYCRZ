@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.sinosoft</groupId>
+	<artifactId>booster-cloud</artifactId>
+	<version>1.0.1</version>
+	<name>${project.artifactId}</name>
+	<packaging>pom</packaging>
+	<description>booster cloud Base Pom</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<booster.cloud.version>1.0.1</booster.cloud.version>
+		<spring.boot.version>2.7.5</spring.boot.version>
+		<spring.checkstyle.plugin>0.0.23</spring.checkstyle.plugin>
+		<docker.plugin.version>0.32.0</docker.plugin.version>
+		<docker.host>https://registry.booster.cn:8191</docker.host>
+		<docker.registry>registry.booster.cn</docker.registry>
+		<docker.namespace>booster</docker.namespace>
+		<docker.username>username</docker.username>
+		<docker.password>password</docker.password>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- booster-dependencies -->
+			<dependency>
+				<groupId>com.sinosoft</groupId>
+				<artifactId>booster-dependencies</artifactId>
+				<version>${booster.cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<!-- spring-boot-configuration-processor -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- jasypt-spring-boot-starter -->
+		<dependency>
+			<groupId>com.github.ulisesbocchio</groupId>
+			<artifactId>jasypt-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- spring-boot-starter-actuator -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<!-- micrometer-registry-prometheus -->
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
+		<!-- lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- spring-boot-starter-test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.name}</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>${spring.boot.version}</version>
+					<configuration>
+						<finalName>${project.build.finalName}</finalName>
+						<layers>
+							<enabled>true</enabled>
+						</layers>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>repackage</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>io.fabric8</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>${docker.plugin.version}</version>
+					<configuration>
+						<dockerHost>${docker.host}</dockerHost>
+						<registry>${docker.registry}</registry>
+						<authConfig>
+							<push>
+								<username>${docker.username}</username>
+								<password>${docker.password}</password>
+							</push>
+						</authConfig>
+						<images>
+							<image>
+								<name>${docker.registry}/${docker.namespace}/${project.name}:${project.version}</name>
+								<build>
+									<dockerFile>${project.basedir}/Dockerfile</dockerFile>
+								</build>
+							</image>
+						</images>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>io.spring.javaformat</groupId>
+				<artifactId>spring-javaformat-maven-plugin</artifactId>
+				<version>${spring.checkstyle.plugin}</version>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<profiles.active>dev</profiles.active>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+	</profiles>
+
+	<modules>
+		<module>booster-dependencies</module>
+		<module>booster-common</module>
+		<module>booster-gateway</module>
+		<module>booster-upms</module>
+		<module>booster-auth</module>
+		<module>booster-visual</module>
+		<module>booster-register</module>
+		<module>booster-infection</module>
+		<module>booster-seata</module>
+		<module>booster-seata-demo</module>
+		<module>booster-mqroute</module>
+		<module>booster-sensitive-demo</module>
+		<module>booster-taskflow-demo</module>
+    	<module>booster-taskflow-app-demo</module>
+		<module>booster-yypass</module>
+  </modules>
+
+</project>

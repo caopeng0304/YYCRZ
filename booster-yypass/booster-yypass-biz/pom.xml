@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+            http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.sinosoft.yypass</groupId>
+        <artifactId>booster-yypass</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>booster-yypass-biz</artifactId>
+	<description>booster cloud gen</description>
+
+    <dependencies>
+		<!--必备: booster-yypass-api模块-->
+		<dependency>
+			<groupId>com.sinosoft.yypass</groupId>
+			<artifactId>booster-yypass-api</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<!--必备: booster-visualdev-api模块-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-visualdev-api</artifactId>
+			<version>${booster.cloud.version}</version>
+		</dependency>
+		<!-- booster-upms-api模块-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-upms-api</artifactId>
+			<version>${booster.cloud.version}</version>
+		</dependency>
+		<!--必备：安全模块-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-security</artifactId>
+		</dependency>
+		<!--必备：日志处理-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-log</artifactId>
+		</dependency>
+		<!--必备：swagger-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-swagger</artifactId>
+		</dependency>
+
+		<!--文件系统-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-minio</artifactId>
+		</dependency>
+
+		<!--必备: 注册中心客户端-->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+		</dependency>
+		<!--必备: 配置中心客户端-->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+		</dependency>
+		<!--必备：undertow容器-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-undertow</artifactId>
+		</dependency>
+		<!--可选：mybatis （需要链接数据库开启）-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-mybatis</artifactId>
+		</dependency>
+
+		<!--openoffice-->
+		<dependency>
+			<groupId>com.artofsolving</groupId>
+			<artifactId>jodconverter</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+			<classifier>jdk15</classifier>
+		</dependency>
+
+		<dependency>
+			<groupId>com.hikvision.ga</groupId>
+			<artifactId>artemis-http-client</artifactId>
+			<version>1.1.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+    </dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

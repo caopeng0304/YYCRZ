@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FlowTaskCirculateMapper">
+
+	<resultMap id="flowTaskCirculateMap" type="com.sinosoft.ie.booster.workflow.entity.FlowTaskCirculateEntity">
+		<id property="id" column="id"/>
+		<result property="objectType" column="object_type"/>
+		<result property="objectId" column="object_id"/>
+		<result property="nodeCode" column="node_code"/>
+		<result property="nodeName" column="node_name"/>
+		<result property="taskNodeId" column="task_node_id"/>
+		<result property="taskId" column="task_id"/>
+		<result property="createTime" column="create_time"/>
+	</resultMap>
+</mapper>

@@ -1,0 +1,176 @@
+package ${package.ServiceImpl};
+
+import ${package.Entity}.${table.entityName};
+import ${package.Mapper}.${table.mapperName};
+import ${package.Service}.${table.serviceName};
+import ${superServiceImplClassPackage};
+#if(${typeId}=='1')
+    #foreach($grid in ${child})
+import ${package.Entity}.${grid.className}Entity;
+import ${package.Service}.${grid.className}Service;
+    #end
+import ${packageName}.model.${genInfo.className.toLowerCase()}.${genInfo.className}Form;
+#end
+import com.sinosoft.ie.booster.admin.api.feign.RemoteBillRuleService;
+import com.sinosoft.ie.booster.common.core.util.JsonUtil;
+import com.sinosoft.ie.booster.common.security.model.BoosterUser;
+import com.sinosoft.ie.booster.common.security.util.SecurityUtils;
+import com.sinosoft.ie.booster.workflow.entity.FlowEngineEntity;
+import org.springframework.stereotype.Service;
+import com.sinosoft.ie.booster.common.core.exception.WorkFlowException;
+import com.sinosoft.ie.booster.workflow.service.FlowEngineService;
+import com.sinosoft.ie.booster.workflow.service.FlowTaskService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+
+import java.util.*;
+/**
+ *
+ * ${genInfo.description}
+ * 版本： ${genInfo.version}
+ * 作者： ${genInfo.createUser}
+ * 日期： ${genInfo.createDate}
+ */
+@Service
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${table.entityName}> implements ${table.serviceName} {
+
+    #if(${typeId}=='1')
+    #set($peimaryKeyName="${genInfo.toUpperAttr(${pKeyName})}")
+    @Autowired
+    private FlowTaskService flowTaskService;
+    @Autowired
+    private FlowEngineService flowEngineService;
+    #foreach($grid in ${child})
+    #set($serviceName = "${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}")
+    @Autowired
+    private ${grid.className}Service ${serviceName}Service;
+    #end
+
+    #foreach($grid in ${child})
+    @Override
+    public List<${grid.className}Entity> get${grid.className}List(Long id){
+        #set($serviceName = "${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}")
+		#set($tableField = "${genInfo.toUpperAttr(${grid.tableField})}")
+        QueryWrapper<${grid.className}Entity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(${grid.className}Entity::get${tableField}, id);
+        return ${serviceName}Service.list(queryWrapper);
+    }
+
+    #end
+    @Override
+    public ${table.entityName} getInfo(Long id){
+        QueryWrapper<${table.entityName}> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(${table.entityName}::get${peimaryKeyName}, id);
+        return this.getOne(queryWrapper);
+    }
+
+    @Override
+    @Transactional
+    public void save(Long id,Long flowId,${table.entityName} entity,String billNo#foreach($grid in ${child}), List<${grid.className}Entity> ${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}List#end) throws WorkFlowException{
+        BoosterUser info = SecurityUtils.getUser();
+        FlowEngineEntity flowEntity = flowEngineService.getInfo(flowId);
+        String title = info.getUsername() + "的" + flowEntity.getFullName();
+        //表单信息
+        if (id == null) {
+            entity.set${peimaryKeyName}(IdWorker.getId());
+            this.save(entity);
+            #foreach($grid in ${child})
+                #set($serviceName = "${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}")
+            for(${grid.className}Entity entitys : ${serviceName}List){
+                #set($tableField = "${genInfo.toUpperAttr(${grid.tableField})}")
+                #set($relationField = "${genInfo.toUpperAttr(${grid.relationField})}")
+                #set($chidKeyName = "${genInfo.toUpperAttr(${grid.chidKeyName})}")
+                entitys.set${tableField}(entity.get${relationField}());
+                ${serviceName}Service.save(entitys);
+            }
+            #end
+        } else {
+            entity.set${peimaryKeyName}(id);
+            this.updateById(entity);
+            #foreach($grid in ${child})
+                #set($tableField = "${genInfo.toUpperAttr(${grid.tableField})}")
+                #set($relationField = "${genInfo.toUpperAttr(${grid.relationField})}")
+                #set($chidKeyName = "${genInfo.toUpperAttr(${grid.chidKeyName})}")
+                #set($serviceName = "${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}")
+            QueryWrapper<${grid.className}Entity> ${grid.className}queryWrapper = new QueryWrapper<>();
+            ${grid.className}queryWrapper.lambda().eq(${grid.className}Entity::get${tableField}, entity.get${relationField}());
+            ${serviceName}Service.remove(${grid.className}queryWrapper);
+            for(${grid.className}Entity entitys : ${serviceName}List){
+                entitys.set${tableField}(entity.get${relationField}());
+                ${serviceName}Service.save(entitys);
+            }
+            #end
+        }
+        //流程信息
+        flowTaskService.save(id, flowId, entity.get${peimaryKeyName}(), title, 1, billNo);
+    }
+
+    @Override
+    @Transactional
+    public void submit(Long id, String freeApprover,Long flowId,${table.entityName} entity,String billNo#foreach($grid in ${child}), List<${grid.className}Entity> ${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}List#end) throws WorkFlowException{
+        BoosterUser info = SecurityUtils.getUser();
+        FlowEngineEntity flowEntity = flowEngineService.getInfo(flowId);
+        String title = info.getUsername() + "的" + flowEntity.getFullName();
+        //表单信息
+        if (id == null) {
+            entity.set${peimaryKeyName}(IdWorker.getId());
+            this.save(entity);
+            #foreach($grid in ${child})
+                #set($serviceName = "${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}")
+            for(${grid.className}Entity entitys : ${serviceName}List){
+                #set($tableField = "${genInfo.toUpperAttr(${grid.tableField})}")
+                #set($relationField = "${genInfo.toUpperAttr(${grid.relationField})}")
+                #set($chidKeyName = "${genInfo.toUpperAttr(${grid.chidKeyName})}")
+                entitys.set${tableField}(entity.get${relationField}());
+                ${serviceName}Service.save(entitys);
+            }
+            #end
+        } else {
+            entity.set${peimaryKeyName}(id);
+            this.updateById(entity);
+            #foreach($grid in ${child})
+                #set($tableField = "${genInfo.toUpperAttr(${grid.tableField})}")
+                #set($relationField = "${genInfo.toUpperAttr(${grid.relationField})}")
+                #set($chidKeyName = "${genInfo.toUpperAttr(${grid.chidKeyName})}")
+                #set($serviceName = "${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}")
+            QueryWrapper<${grid.className}Entity> ${grid.className}queryWrapper = new QueryWrapper<>();
+            ${grid.className}queryWrapper.lambda().eq(${grid.className}Entity::get${tableField}, entity.get${relationField}());
+            ${serviceName}Service.remove(${grid.className}queryWrapper);
+            for(${grid.className}Entity entitys : ${serviceName}List){
+                entitys.set${tableField}(entity.get${relationField}());
+                ${serviceName}Service.save(entitys);
+            }
+            #end
+        }
+        //流程信息
+        flowTaskService.submit(id, flowId, entity.get${peimaryKeyName}(), title, 1, billNo, entity, freeApprover);
+    }
+
+	@Override
+	public void data(Long id,String data){
+		${modelName}Form ${formName}Form =JsonUtil.getJsonToBean(data,${modelName}Form.class );
+		${table.entityName} entity = JsonUtil.getJsonToBean(${formName}Form, ${modelName}Entity.class);
+		#foreach($grid in ${child})
+            #set($serviceName = "${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}")
+		List<${grid.className}Entity> ${serviceName}List = JsonUtil.getJsonToList(${formName}Form.get${grid.className}List(),${grid.className}Entity.class);
+		#end
+		entity.set${peimaryKeyName}(id);
+		this.updateById(entity);
+		#foreach($grid in ${child})
+            #set($tableField = "${genInfo.toUpperAttr(${grid.tableField})}")
+            #set($relationField = "${genInfo.toUpperAttr(${grid.relationField})}")
+            #set($chidKeyName = "${genInfo.toUpperAttr(${grid.chidKeyName})}")
+			#set($serviceName = "${grid.className.substring(0,1).toLowerCase()}${grid.className.substring(1)}")
+		QueryWrapper<${grid.className}Entity> ${grid.className}queryWrapper = new QueryWrapper<>();
+		${grid.className}queryWrapper.lambda().eq(${grid.className}Entity::get${tableField}, entity.get${relationField}());
+		${serviceName}Service.remove(${grid.className}queryWrapper);
+		for(${grid.className}Entity entitys : ${serviceName}List){
+			entitys.set${tableField}(entity.get${relationField}());
+			${serviceName}Service.save(entitys);
+		}
+		#end
+	}
+    #end
+}

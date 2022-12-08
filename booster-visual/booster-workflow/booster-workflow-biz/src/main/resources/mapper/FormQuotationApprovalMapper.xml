@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormQuotationApprovalMapper">
+
+	<resultMap id="formQuotationApprovalMap" type="com.sinosoft.ie.booster.workflow.entity.FormQuotationApprovalEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="writer" column="writer"/>
+		<result property="writeDate" column="write_date"/>
+		<result property="customerName" column="customer_name"/>
+		<result property="quotationType" column="quotation_type"/>
+		<result property="partnerName" column="partner_name"/>
+		<result property="standardFile" column="standard_file"/>
+		<result property="describeSituation" column="describe_situation"/>
+		<result property="fileJson" column="file_json"/>
+	</resultMap>
+</mapper>

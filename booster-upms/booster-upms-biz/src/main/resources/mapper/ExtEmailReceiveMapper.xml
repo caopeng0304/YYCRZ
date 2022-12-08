@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.admin.mapper.ExtEmailReceiveMapper">
+
+	<resultMap id="extEmailReceiveMap" type="com.sinosoft.ie.booster.admin.api.entity.ExtEmailReceiveEntity">
+		<id property="id" column="id"/>
+		<result property="type" column="type"/>
+		<result property="mailAccount" column="mail_account"/>
+		<result property="mailId" column="mail_id"/>
+		<result property="sender" column="sender"/>
+		<result property="senderName" column="sender_name"/>
+		<result property="subject" column="subject"/>
+		<result property="bodyText" column="body_text"/>
+		<result property="attachment" column="attachment"/>
+		<result property="isRead" column="is_read"/>
+		<result property="sentDate" column="sent_date"/>
+		<result property="starred" column="starred"/>
+		<result property="description" column="description"/>
+		<result property="sort" column="sort"/>
+		<result property="enabledFlag" column="enabled_flag"/>
+		<result property="delFlag" column="del_flag"/>
+		<result property="createTime" column="create_time"/>
+		<result property="createBy" column="create_by"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="updateBy" column="update_by"/>
+	</resultMap>
+</mapper>

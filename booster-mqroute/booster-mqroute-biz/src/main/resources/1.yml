@@ -1,0 +1,22 @@
+
+#rocketmq:
+#  config:
+#    # if this value is empty,use env value rocketmq.config.namesrvAddr  NAMESRV_ADDR | now, default localhost:9876
+#    # configure multiple namesrv addresses to manage multiple different clusters
+#    namesrvAddrs:
+#      - 42.192.148.85:9876
+#    timeoutMillis: 300
+#    retryTimesWhenSendFailed: 2
+#    retryTimesWhenSendAsyncFailed: 2
+#    producerGroup: booster-producer
+#    consumerGroup: booster-consumer
+
+rocketmq:
+  name-server: 
+    - 42.192.148.85:9876
+  producer:
+    isOnOff: on
+    group: booster-producer
+    sendMsgTimeOut: 3000
+  consumer:
+    group: booster-consumer

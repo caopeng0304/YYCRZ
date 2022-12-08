@@ -1,0 +1,694 @@
+#set($configValueUtil=0)
+#set($userProvider=0)
+#set($dynDicUtil=0)
+#set($billRuleService=0)
+#set($positionService=0)
+#set($provinceService=0)
+#set($organizeService=0)
+#foreach($btn in ${btnsList})
+    #if(${btn.value}=='download')
+        #set($configValueUtil=1)
+    #end
+#end
+#foreach($field in ${formList})
+    #set($fieldName=${field.vModel})
+    #set($FieldName="${genInfo.toUpperAttr(${field.vModel})}")
+    #if(${field.config.dataType}=='dictionary' && ${field.config.dictionaryType})
+        #set($dynDicUtil=1)
+    #end
+    #set($model = "${genInfo.toUpperAttr(${field.vModel})}")
+    #set($key = ${field.config.boosKey})
+    #if(${key}=='currDept'||${key}=='currOrganize')
+        #set($organizeService=1)
+    #elseif(${key}=='currPosition')
+        #set($positionService=1)
+    #elseif(${key}=='address')
+        #set($provinceService=1)
+    #elseif(${key}=='billRule')
+        #set($billRuleService=1)
+    #end
+#end
+#macro(List)
+    #set($index=0)
+    #if($fieldsSize.size()>0)
+        //处理id字段转名称，若无需转或者为空可删除
+
+    for(${table.entityName} entity:list){
+        #set($currtCountList=1)
+        #set($userCountList=1)
+        #set($provCount=1)
+        #set($dateRangeCount=1)
+        #set($comSelectCount=1)
+        #foreach($field in ${formList})
+            #set($fieldName=${field.vModel})
+            #set($FieldName="${genInfo.toUpperAttr(${field.vModel})}")
+            #if(${field.config.dataType}=='dictionary' && ${field.config.dictionaryType})
+        entity.set${FieldName}(dynDicUtil.getDicName("${field.config.dictionaryType}", entity.get${FieldName}()));
+            #elseif(${field.config.dataType}=='dynamic' && ${field.config.propsUrl})
+        entity.set${FieldName}(dynDicUtil.getDynName("${field.config.propsUrl}" ,"${field.config.props.label}" ,"${field.config.props.value}" ,entity.get${FieldName}()));
+            #end
+            #set($model = "${genInfo.toUpperAttr(${field.vModel})}")
+            #set($key = ${field.config.boosKey})
+            #if(${key}=='currDept'||${key}=='currOrganize')
+        entity.set${model}(generaterSwapUtil.comSelectValue(entity.get${model}()));
+            #elseif(${key}=='currPosition')
+        entity.set${model}(generaterSwapUtil.posSelectValue(entity.get${model}()));
+            #elseif(${key}=='address')
+        List<String> provList${provCount}=generaterSwapUtil.provinceData(entity.get${model}());
+        if(provList${provCount}!=null&&provList${provCount}.size()>0){
+            StringBuilder restStr=new StringBuilder();
+            List<SysRegionEntity> provinceEntities = provinceService.listByIds(provList${provCount}).getData();
+            for (SysRegionEntity proventity${provCount} : provinceEntities) {
+                restStr.append(proventity${provCount}.getName()+"/");
+            }
+            if (restStr.length() != 0) {
+                restStr.deleteCharAt(restStr.length() - 1);
+            }
+            entity.set${model}(String.valueOf(restStr));
+        }
+                #set($provCount=${provCount}+1)
+            #elseif(${key}=='dateRange')
+        entity.set${model}(generaterSwapUtil.dateSwap(entity.get${FieldName}(),"${field.format}"));
+                #set($dateRangeCount=${dateRangeCount}+1)
+            #elseif(${key}=='comSelect'||${key}=='depSelect')
+        entity.set${model}(generaterSwapUtil.comSelectValues(entity.get${FieldName}()));
+                #set($comSelectCount=${comSelectCount}+1)
+            #end
+            #if(${field.multiple}=="true"|| ${field.config.boosKey}=="checkbox")
+                #set($index=${index}+1)
+            #end
+        #end
+            }
+    #end
+    #if(${index}>0)
+        List<String> arrayFieldList=new ArrayList<>();
+        #foreach($field in ${formList})
+            #if(${field.multiple}=="true"|| ${field.config.boosKey}=="checkbox")
+        arrayFieldList.add("${field.vModel}");
+            #end
+        #end
+        List<Map<String, Object>> mapListVO = JsonUtil.getJsonToListMap(JsonUtil.getObjectToString(list));
+        List<Map<String, Object>> newMapListVO = new ArrayList<>();
+        for(Map<String, Object> dataMap:mapListVO){
+            for(String field:arrayFieldList){
+                if(dataMap.get(field)!=null){
+                    dataMap.put(field,dataMap.get(field).toString().split(","));
+                }
+            }
+            newMapListVO.add(dataMap);
+        }
+        List<${Name}ListVO> listVO = JsonUtil.getJsonToList(JsonUtil.getObjectToString(newMapListVO),${Name}ListVO.class);
+    #else
+        List<${Name}ListVO> listVO=JsonUtil.getJsonToList(list,${Name}ListVO.class);
+    #end
+#end
+package ${package.Controller};
+
+    #set($serviceName = "${genInfo.toLowerAttr(${genInfo.className})}Service")
+    #set($Name = "${genInfo.toUpperAttr(${genInfo.className})}")
+    #set($name = "${genInfo.toLowerAttr(${genInfo.className})}")
+    #set($packName = "${name.toLowerCase()}")
+    #set($searchListSize =$!{searchList})
+    #set($fieldsSize=$!{formList})
+    #set($columnListSize=$!{columnList})
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.sinosoft.ie.booster.admin.api.feign.RemoteBillRuleService;
+import com.sinosoft.ie.booster.common.security.util.SecurityUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import com.sinosoft.ie.booster.common.core.util.R;
+import com.sinosoft.ie.booster.common.core.model.PageListVO;
+import com.sinosoft.ie.booster.common.core.model.PaginationVO;
+import com.sinosoft.ie.booster.common.security.model.BoosterUser;
+import com.sinosoft.ie.booster.common.core.model.DownloadVO;
+import com.sinosoft.ie.booster.visualdev.util.*;
+import com.sinosoft.ie.booster.common.core.exception.DataException;
+import org.springframework.transaction.annotation.Transactional;
+import ${packageName}.model.${packName}.${Name}PaginationExportModel;
+#if($hasPage == true)
+import ${packageName}.model.${packName}.${Name}Pagination;
+#elseif($searchListSize.size()>0)
+import ${packageName}.model.${packName}.${Name}ListQuery;
+#end
+#if(${organizeService}==1)
+import com.sinosoft.ie.booster.admin.api.entity.SysDeptEntity;
+import com.sinosoft.ie.booster.admin.api.feign.RemoteDeptService;
+#end
+#if(${provinceService}==1)
+import com.sinosoft.ie.booster.admin.api.entity.SysRegionEntity;
+import com.sinosoft.ie.booster.admin.api.feign.RemoteRegionService;
+#end
+import ${packageName}.model.${packName}.${Name}CrForm;
+import ${packageName}.model.${packName}.${Name}InfoVO;
+import ${packageName}.model.${packName}.${Name}ListVO;
+import ${packageName}.model.${packName}.${Name}UpForm;
+import ${package.Entity}.*;
+import com.sinosoft.ie.booster.common.core.util.JsonUtil;
+import com.sinosoft.ie.booster.common.core.model.ListVO;
+import com.sinosoft.ie.booster.visualdev.util.GeneraterSwapUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ${package.Entity}.${Name}Entity;
+import ${package.Service}.${table.serviceName};
+    #foreach($tableModel in ${genInfo.dbTableRelation})
+        #foreach($subfield in ${subtables})
+            #if(${tableModel.table}==${subfield.subKey})
+                #set($ChildName="${genInfo.toUpperAttr(${subfield.subValue})}")
+                #set($childName="${genInfo.toLowerAttr(${subfield.subValue})}")
+import ${package.Entity}.${ChildName}Entity;
+import ${package.Service}.${ChildName}Service;
+            #end
+        #end
+    #end
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
+import javax.validation.Valid;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
+
+/**
+ *
+ * ${genInfo.description}
+ * @版本： ${genInfo.version}
+ * @作者： ${genInfo.createUser}
+ * @日期： ${genInfo.createDate}
+ */
+@Slf4j
+@RestController
+@Api(tags = "${genInfo.description}")
+@RequestMapping("/${Name}")
+public class ${table.controllerName} {
+#set($peimaryKeyName = "${genInfo.toUpperAttr(${pKeyName})}")
+#set($peimaryKeyname = "${genInfo.toLowerAttr(${pKeyName})}")
+#if(${dynDicUtil}==1)
+    @Autowired
+    private DynDicUtil dynDicUtil;
+#end
+    @Autowired
+    private GeneraterSwapUtil generaterSwapUtil;
+#if(${organizeService}==1)
+    @Autowired
+    private RemoteDeptService organizeService;
+#end
+#if(${provinceService}==1)
+    @Autowired
+    private RemoteRegionService provinceService;
+#end
+#if(${positionService}==1)
+    @Autowired
+    private PositionService positionService;
+#end
+#if(${configValueUtil}==1)
+    @Autowired
+    private ConfigValueUtil configValueUtil;
+#end
+#if(${billRuleService}==1)
+    @Autowired
+    private RemoteBillRuleService billRuleService;
+#end
+    @Autowired
+    private ${table.serviceName} ${serviceName};
+
+    #foreach($tableModel in ${genInfo.dbTableRelation})
+    #foreach($subfield in ${subtables})
+        #if(${tableModel.table}==${subfield.subKey})
+            #set($ChildName="${genInfo.toUpperAttr(${subfield.subValue})}")
+            #set($childName="${genInfo.toLowerAttr(${subfield.subValue})}")
+    @Autowired
+    private ${ChildName}Service ${childName}Service;
+        #end
+    #end
+    #end
+
+    #if($hasPage == true)
+    /**
+     * 列表
+     *
+     * @param ${name}Pagination
+     * @return
+     */
+    @GetMapping
+    public R<PageListVO<${Name}ListVO>> list(${Name}Pagination ${name}Pagination)throws IOException{
+        List<${table.entityName}> list= ${serviceName}.getList(${name}Pagination);
+#List()
+        PageListVO<${Name}ListVO> vo=new PageListVO<>();
+        vo.setList(listVO);
+        PaginationVO page=JsonUtil.getJsonToBean(${name}Pagination,PaginationVO.class);
+        vo.setPagination(page);
+        return R.ok(vo);
+    }
+    #elseif($searchListSize.size()>0)
+    /**
+     * 列表
+     *
+     * @param ${name}ListQuery
+     * @return
+     */
+    @GetMapping
+    public R<ListVO<${Name}ListVO>> list(${Name}ListQuery ${name}ListQuery)throws IOException{
+        List<${table.entityName}> list= ${serviceName}.getList(${name}ListQuery);
+        #List()
+        ListVO<${Name}ListVO> vo=new ListVO<>();
+        vo.setList(listVO);
+        return R.ok(vo);
+    }
+    #else
+    /**
+     * 列表
+     *
+     * @return
+     */
+    @GetMapping
+    public R<ListVO<${Name}ListVO>> list()throws IOException{
+        List<${table.entityName}> list= ${serviceName}.getList();
+        #List()
+        ListVO<${Name}ListVO> vo=new ListVO<>();
+        vo.setList(listVO);
+        return R.ok(vo);
+    }
+    #end
+
+#foreach($btn in ${btnsList})
+    #if(${btn.value}=='add')
+    /**
+     * 创建
+     *
+     * @param ${name}CrForm
+     * @return
+     */
+    @PostMapping
+    @Transactional
+    public R<String> create(@RequestBody @Valid ${Name}CrForm ${name}CrForm) throws DataException {
+        BoosterUser userInfo=SecurityUtils.getUser();
+    #foreach($field in ${formList})
+        #set($model = "${genInfo.toUpperAttr(${field.vModel})}")
+        #set($key = ${field.config.boosKey})
+        #if(${key}=='createUser')
+        ${name}CrForm.set${model}(userInfo.getUsername());
+        #elseif(${key}=='createTime')
+        ${name}CrForm.set${model}(DateUtil.getNow());
+        #elseif(${key}=='currDept')
+        ${name}CrForm.set${model}(String.valueOf(userInfo.getDeptId()));
+        #elseif(${key}=='currOrganize')
+        ${name}CrForm.set${model}(String.valueOf(userInfo.getDeptId()));
+        #elseif(${key}=='currPosition')
+        if(userInfo.getPositionIds()!=null&&userInfo.getPositionIds().length>0){
+            ${name}CrForm.set${model}(userInfo.getPositionIds()[0]);
+        }
+        #elseif(${key}=='billRule')
+        String billNumber = billRuleService.getBillNumber("${field.config.rule}").getData();
+        ${name}CrForm.set${model}(billNumber);
+        #end
+    #end
+        ${Name}Entity entity=JsonUtil.getJsonToBean(${name}CrForm, ${Name}Entity.class);
+        ${serviceName}.create(entity);
+#foreach($tableModel in ${genInfo.dbTableRelation})
+#foreach($subfield in ${subtables})
+#if(${tableModel.table}==${subfield.subKey})
+#set($ChildName="${genInfo.toUpperAttr(${subfield.subValue})}Entity")
+#set($childName="${genInfo.toLowerAttr(${subfield.subValue})}Entity")
+#set($childService="${genInfo.toLowerAttr(${subfield.subValue})}Service")
+#set($mainFeild="${tableModel.relationField}")
+#set($MainFeild="${genInfo.toUpperAttr(${tableModel.relationField})}")
+#set($childFeild="${tableModel.tableField}")
+#set($ChildFeild="${genInfo.toUpperAttr(${tableModel.tableField})}")
+#set($ChildKey="${genInfo.toUpperAttr(${tableModel.tableKey})}")
+
+        List<${ChildName}> ${childName}List= ${name}CrForm.get${ChildName}List();
+        if(${childName}List!=null){
+            for(${ChildName} ${childName}:${childName}List) {
+                ${childName}.set${ChildFeild}(entity.get${MainFeild}());
+#foreach($field in ${formList})
+#if(${field.vModel}=="${childName}List")
+#foreach($childField in ${field.config.children})
+#set($model = ${genInfo.toUpperAttr(${field.vModel})})
+#set($key = ${field.config.boosKey})
+#if(${key}=='createUser')
+        ${childName}.set${model}(userInfo.getUsername());
+#elseif(${key}=='createTime')
+        ${childName}.set${model}(DateUtil.getNow());
+#elseif(${key}=='currDept')
+        ${childName}.set${model}(String.valueOf(userInfo.getDeptId()));
+#elseif(${key}=='currOrganize')
+        ${childName}.set${model}(String.valueOf(userInfo.getDeptId()));
+#elseif(${key}=='currPosition')
+        ${childName}.set${model}(userInfo.getPositionIds()[0]);
+#elseif(${key}=='billRule')
+        String billNumber = billRuleService.getBillNumber("${field.config.rule}").getData();
+        ${childName}.set${model}(billNumber);
+#end
+#end
+#end
+#end
+            }
+            ${childService}.saveBatch(${childName}List);
+        }
+#end
+#end
+#end
+        return R.ok(null, "新建成功");
+}
+#end
+
+    #if(${btn.value}=='download')
+    /**
+    * 模板下载
+    *
+    * @return
+    */
+    @ApiOperation("模板下载")
+    @GetMapping("/templateDownload")
+    public R<DownloadVO>  TemplateDownload(){
+        BoosterUser userInfo=SecurityUtils.getUser();
+        DownloadVO vo=DownloadVO.builder().build();
+        try{
+            vo.setName("职员信息.xlsx");
+            vo.setUrl(UploaderUtil.uploaderFile("/file/DownloadModel?encryption=" ,userInfo.getId()+"#"+"职员信息.xlsx"+"#"+"Temporary"));
+        }catch(Exception e){
+            log.error("信息导出Excel错误:{}" ,e.getMessage());
+        }
+        return R.ok(vo);
+    }
+    #if($hasPage == true)
+
+    /**
+    * 导出Excel
+    *
+    * @return
+    */
+    @ApiOperation("导出Excel")
+    @GetMapping("/Actions/Export")
+    public R<DownloadVO> Export(${Name}PaginationExportModel ${name}PaginationExportModel) throws IOException {
+        ${Name}Pagination ${name}Pagination=JsonUtil.getJsonToBean(${name}PaginationExportModel, ${Name}Pagination.class);
+        List<${table.entityName}> list= ${serviceName}.getTypeList(${name}Pagination,${name}PaginationExportModel.getDataType());
+        #List()
+        //转换为map输出
+        List<Map<String, Object>>mapList=JsonUtil.getJsonToListMap(JsonUtil.getObjectToStringDateFormat(listVO,"yyyy-MM-dd HH:mm:ss"));
+        String[]keys=!StrUtil.isEmpty(${name}PaginationExportModel.getSelectKey())?${name}PaginationExportModel.getSelectKey().split(","):new String[0];
+        BoosterUser userInfo=SecurityUtils.getUser();
+        DownloadVO vo=creatModelExcel(configValueUtil.getTemporaryFilePath(),mapList,keys,userInfo);
+        return R.ok(vo);
+    }
+
+    //导出表格
+    public static DownloadVO creatModelExcel(String path,List<Map<String, Object>>list,String[]keys,BoosterUser userInfo){
+        DownloadVO vo=DownloadVO.builder().build();
+        try{
+            List<ExcelExportEntity> entitys=new ArrayList<>();
+            if(keys.length>0){
+                for(String key:keys){
+                    switch(key){
+            #if($columnListSize.size()>0)
+                #foreach($columnfield in ${columnList})
+                    #set($columnFieldLowerProp=${genInfo.toLowerAttr(${columnfield.prop})})
+                        case"${columnFieldLowerProp}" :
+                        entitys.add(new ExcelExportEntity("${columnfield.label}" ,"${columnFieldLowerProp}"));
+                        break;
+                #end
+            default:
+                    break;
+            #end
+                    }
+                }
+            }
+            ExportParams exportParams = new ExportParams(null, "表单信息");
+            Workbook workbook = ExcelExportUtil.exportExcel(exportParams, entitys, list);
+            String fileName = "表单信息" + DateUtil.dateNow("yyyyMMddHHmmss") + ".xls";
+            vo.setName(fileName);
+            vo.setUrl(UploaderUtil.uploaderFile(userInfo.getId() + "#" + fileName + "#" + "Temporary"));
+            path =path+fileName;
+            FileOutputStream fos = new FileOutputStream(path);
+            workbook.write(fos);
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            }
+        return vo;
+    }
+#else
+
+    /**
+    * 导出Excel
+    *
+    * @return
+    */
+    @ApiOperation("导出Excel")
+    @GetMapping("/Actions/Export")
+    public R<DownloadVO> Export(${Name}PaginationExportModel ${name}PaginationExportModel) throws IOException{
+        ${Name}ListQuery ${name}ListQuery=JsonUtil.getJsonToBean(${name}PaginationExportModel, ${Name}ListQuery.class);
+        List<${table.entityName}> list= ${serviceName}.getTypeList(${name}ListQuery,${name}PaginationExportModel.getDataType());
+        #List()
+        //转换为map输出
+        List<Map<String, Object>>mapList=JsonUtil.getJsonToListMap(JsonUtil.getObjectToStringDateFormat(listVO,"yyyy-MM-dd HH:mm:ss"));
+        String[]keys=!StrUtil.isEmpty(${name}PaginationExportModel.getSelectKey())?${name}PaginationExportModel.getSelectKey().split(","):new String[0];
+        BoosterUser userInfo=SecurityUtils.getUser();
+        DownloadVO vo=creatModelExcel(configValueUtil.getTemporaryFilePath(),mapList,keys,userInfo);
+        return R.ok(vo);
+    }
+
+    //导出表格
+    public static DownloadVO creatModelExcel(String path,List<Map<String, Object>>list,String[]keys,BoosterUser userInfo){
+        DownloadVO vo=DownloadVO.builder().build();
+        try{
+            List<ExcelExportEntity> entitys=new ArrayList<>();
+            if(keys.length>0){
+                for(String key:keys){
+                    switch(key){
+            #if($columnListSize.size()>0)
+                #foreach($columnfield in ${columnList})
+                    #set($columnFieldLowerProp=${genInfo.toLowerAttr(${columnfield.prop})})
+                        case"${columnFieldLowerProp}" :
+                        entitys.add(new ExcelExportEntity("${columnfield.label}" ,"${columnFieldLowerProp}"));
+                        break;
+                #end
+            default:
+                    break;
+            #end
+                    }
+                }
+            }
+            ExportParams exportParams = new ExportParams(null, "表单信息");
+            Workbook workbook = ExcelExportUtil.exportExcel(exportParams, entitys, list);
+            String fileName = "表单信息" + DateUtil.dateNow("yyyyMMddHHmmss") + ".xls";
+            vo.setName(fileName);
+            vo.setUrl(UploaderUtil.uploaderFile(userInfo.getId() + "#" + fileName + "#" + "Temporary"));
+            path =path+fileName;
+            FileOutputStream fos = new FileOutputStream(path);
+            workbook.write(fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        return vo;
+    }
+    #end
+    #end
+    #end
+
+    /**
+    * 信息
+    *
+    * @param id
+    * @return
+    */
+    @GetMapping("/{id}")
+    public R<${Name}InfoVO> info(@PathVariable("id") Long id){
+        ${Name}Entity entity= ${serviceName}.getInfo(id);
+        ${Name}InfoVO vo=JsonUtil.getJsonToBean(entity, ${Name}InfoVO.class);
+#set($currtCount=1)
+    #foreach($field in $formList)
+    #set($boosKey="${field.config.boosKey}")
+    #set($fieldName="${genInfo.toUpperAttr(${field.vModel})}")
+    #if(${boosKey}=='createTime'||${boosKey}=='modifyTime')
+        if(vo.get${fieldName}()!=null){
+            vo.set${fieldName}(DateUtil.daFormatHHMMSSAddEight(Long.valueOf(vo.get${fieldName}())));
+        }
+    #elseif(${boosKey}=='currDept'||${boosKey}=='currOrganize')
+        #if(${currtCount}==1)
+        SysDeptEntity deptEntity= organizeService.info(Integer.valueOf(entity.get${fieldName}())).getData();
+        #set($currtCount=${currtCount}+1)
+        #end
+        if(deptEntity != null){
+            vo.set${fieldName}(deptEntity.getName());
+        }
+    #elseif(${boosKey}=='currPosition')
+        List<PositionEntity> mapList= positionService.getPosRedisList();
+        for(PositionEntity positionEntity:mapList){
+            if(entity.get${fieldName}().equals(positionEntity.getId())){
+                vo.set${fieldName}(positionEntity.getFullName());
+            }
+        }
+    #end
+    #end
+#foreach($vmodel in $formList)
+#foreach($tableModel in ${genInfo.dbTableRelation})
+#foreach($subfield in ${subtables})
+#if(${tableModel.table}==${subfield.subKey}&&${vmodel.config.boosKey}=='table'&&${vmodel.config.tableName}==${tableModel.table})
+    #set($ChildName="${genInfo.toUpperAttr(${subfield.subValue})}")
+    #set($childName="${genInfo.toLowerAttr(${subfield.subValue})}")
+    #set($mainFeild="${tableModel.relationField}")
+    #set($MainFeild="${genInfo.toUpperAttr(${tableModel.relationField})}")
+    #set($childFeild="${tableModel.tableField}")
+    #set($ChildFeild="${genInfo.toUpperAttr(${tableModel.tableField})}")
+        List<${ChildName}Entity> ${childName}EntityList=${serviceName}.get${ChildName}EntityList();
+        if(${childName}EntityList!=null&&${childName}EntityList.size()>0){
+            QueryWrapper<${ChildName}Entity> queryWrapper${ChildName}=new QueryWrapper<>();
+            queryWrapper${ChildName}.lambda().eq(${ChildName}Entity::get${ChildFeild},entity.get${MainFeild}());
+            List<${ChildName}Entity> list=${childName}Service.list(queryWrapper${ChildName});
+            list=JsonUtil.getJsonToList(list,${ChildName}Entity.class);
+            vo.set${ChildName}EntityList(list);
+        }else{
+            List<${ChildName}Entity> list=new ArrayList<>();
+            vo.set${ChildName}EntityList(list);
+        }
+#end
+#end
+#end
+#end
+        return R.ok(vo);
+    }
+
+#foreach($column in ${columnBtnsList})
+
+    #if(${column.value}=='remove')
+   /**
+    * 删除
+    *
+    * @param id
+    * @return
+    */
+    @DeleteMapping("/{id}")
+    @Transactional
+    public R<String> delete(@PathVariable("id") Long id){
+        ${Name}Entity entity= ${serviceName}.getInfo(id);
+        if(entity!=null){
+            ${serviceName}.delete(entity);
+#foreach($tableModel in ${genInfo.dbTableRelation})
+#foreach($subfield in ${subtables})
+#if(${tableModel.table}==${subfield.subKey})
+    #set($ChildName="${genInfo.toUpperAttr(${subfield.subValue})}")
+    #set($childName="${genInfo.toLowerAttr(${subfield.subValue})}")
+    #set($mainFeild="${tableModel.relationField}")
+    #set($MainFeild="${genInfo.toUpperAttr(${tableModel.relationField})}")
+    #set($childFeild="${tableModel.tableField}")
+    #set($ChildFeild="${genInfo.toUpperAttr(${tableModel.tableField})}")
+            QueryWrapper<${ChildName}Entity> queryWrapper${ChildName}=new QueryWrapper<>();
+            queryWrapper${ChildName}.lambda().eq(${ChildName}Entity::get${ChildFeild},entity.get${MainFeild}());
+            ${childName}Service.remove(queryWrapper${ChildName});
+#end
+#end
+#end
+        }
+        return R.ok(null, "删除成功");
+    }
+#end
+
+    #if(${column.value}=='edit')
+   /**
+    * 更新
+    *
+    * @param id
+    * @return
+    */
+    @PutMapping("/{id}")
+    @Transactional
+    public R<String> update(@PathVariable("id") Long id,@RequestBody @Valid ${Name}UpForm ${name}UpForm) throws DataException {
+        ${Name}Entity entity= ${serviceName}.getInfo(id);
+        if(entity!=null){
+#foreach($tableModel in ${genInfo.dbTableRelation})
+#foreach($subfield in ${subtables})
+    #if(${tableModel.table}==${subfield.subKey})
+        #set($ChildName="${genInfo.toUpperAttr(${subfield.subValue})}Entity")
+        #set($childName="${genInfo.toLowerAttr(${subfield.subValue})}Entity")
+        #set($childService="${genInfo.toLowerAttr(${subfield.subValue})}Service")
+        #set($mainFeild="${tableModel.relationField}")
+        #set($MainFeild="${genInfo.toUpperAttr(${tableModel.relationField})}")
+        #set($childFeild="${tableModel.tableField}")
+        #set($ChildFeild="${genInfo.toUpperAttr(${tableModel.tableField})}")
+            QueryWrapper<${ChildName}> queryWrapper${ChildName}=new QueryWrapper<>();
+            queryWrapper${ChildName}.lambda().eq(${ChildName}::get${ChildFeild},entity.get${MainFeild}());
+            ${childService}.remove(queryWrapper${ChildName});
+    #end
+#end
+#end
+            BoosterUser userInfo = SecurityUtils.getUser();
+#foreach($field in ${formList})
+    #set($model = "${genInfo.toUpperAttr(${field.vModel})}")
+    #set($key = ${field.config.boosKey})
+    #if(${key}=='createUser')
+            ${name}UpForm.set${model}(entity.get${model}());
+    #elseif(${key}=='createTime')
+            ${name}UpForm.set${model}(DateUtil.dateFormat(entity.get${model}()));
+    #elseif(${key}=='modifyUser')
+            ${name}UpForm.set${model}(userInfo.getUsername());
+    #elseif(${key}=='modifyTime')
+            ${name}UpForm.set${model}(DateUtil.dateFormat(new Date()));
+    #elseif(${key}=='currDept')
+            ${name}UpForm.set${model}(String.valueOf(userInfo.getDeptId()));
+    #elseif(${key}=='currOrganize')
+            ${name}UpForm.set${model}(String.valueOf(userInfo.getDeptId()));
+    #elseif(${key}=='currPosition')
+            ${name}UpForm.set${model}(userInfo.getPositionIds()[0]);
+    #elseif(${key}=='billRule')
+            String billNumber = billRuleService.getBillNumber("${field.config.rule}").getData();
+            ${name}UpForm.set${model}(billNumber);
+    #end
+#end
+            entity=JsonUtil.getJsonToBean(${name}UpForm, ${Name}Entity.class);
+            ${serviceName}.update(id, entity);
+#foreach($tableModel in ${genInfo.dbTableRelation})
+#foreach($subfield in ${subtables})
+    #if(${tableModel.table}==${subfield.subKey})
+        #set($ChildName="${genInfo.toUpperAttr(${subfield.subValue})}Entity")
+        #set($childName="${genInfo.toLowerAttr(${subfield.subValue})}Entity")
+        #set($childService="${genInfo.toLowerAttr(${subfield.subValue})}Service")
+        #set($mainFeild="${tableModel.relationField}")
+        #set($MainFeild="${genInfo.toUpperAttr(${tableModel.relationField})}")
+        #set($childFeild="${tableModel.tableField}")
+        #set($ChildFeild="${genInfo.toUpperAttr(${tableModel.tableField})}")
+        #set($ChildKey="${genInfo.toUpperAttr(${tableModel.tableKey})}")
+            List<${ChildName}> ${childName}List= ${name}UpForm.get${ChildName}List();
+            if(${childName}List!=null){
+                for(${ChildName} ${childName}:${childName}List) {
+                    ${childName}.set${ChildFeild}(entity.get${MainFeild}());
+#foreach($field in ${formList})
+#if(${field.vModel}=="${childName}EntityList")
+#foreach($childField in ${field.config.children})
+    #set($model = "${genInfo.toUpperAttr(${field.vModel})}")
+    #set($key = ${field.config.boosKey})
+    #if(${key}=='currDept')
+                    ${childName}.set${model}(String.valueOf(userInfo.getDeptId()));
+    #elseif(${key}=='currPosition')
+                    ${childName}.set${model}(userInfo.getPositionIds()[0]);
+    #elseif(${key}=='billRule')
+                    String billNumber = billRuleService.getBillNumber("${field.config.rule}").getData();
+                    ${childName}.set${model}(billNumber);
+    #end
+#end
+#end
+#end
+                }
+                ${childService}.saveBatch(${childName}List);
+            }
+            #end
+        #end
+    #end
+        return R.ok(null, "更新成功");
+        }else{
+            return R.failed("更新失败，数据不存在");
+        }
+    }
+    #end
+#end
+}

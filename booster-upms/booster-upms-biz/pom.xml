@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>booster-upms</artifactId>
+		<groupId>com.sinosoft</groupId>
+		<version>1.0.1</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>booster-upms-biz</artifactId>
+	<description>booster 通用用户权限管理系统业务处理模块</description>
+
+	<dependencies>
+		<!--upms api、model 模块-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-upms-api</artifactId>
+			<version>${booster.cloud.version}</version>
+		</dependency>
+		<!--安全模块-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-security</artifactId>
+		</dependency>
+		<!--日志处理-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-log</artifactId>
+		</dependency>
+		<!--接口文档-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-swagger</artifactId>
+		</dependency>
+		<!--mybatis 模块-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-mybatis</artifactId>
+		</dependency>
+		<!--文件系统-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-minio</artifactId>
+		</dependency>
+		<!--注册中心客户端-->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+		</dependency>
+		<!--配置中心客户端-->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+		</dependency>
+		<!-- tomcat容器-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+		</dependency>
+		<!-- websocket -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+		<!-- 缩略图 -->
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+		</dependency>
+		<!-- email -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+		</dependency>
+		<!--booster-common-visualdev-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-visualdev</artifactId>
+		</dependency>
+		<!--风控引擎集成组件-->
+		<dependency>
+			<groupId>com.sinosoft</groupId>
+			<artifactId>booster-common-risk</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>**/*.xlsx</exclude>
+					<exclude>**/*.xls</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.xlsx</include>
+					<include>**/*.xls</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
+
+</project>

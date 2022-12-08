@@ -1,0 +1,9 @@
+1.使用Maven的命令进行安装
+mvn install:install-file -Dfile=./kingbase8-8.2.0.jar -DgroupId=com.kingbase -DartifactId=kingbase8 -Dversion=8.2.0 -Dpackaging=jar
+
+2.POM文件依赖添加
+<dependency>
+    <groupId>com.kingbase</groupId>
+    <artifactId>kingbase8</artifactId>
+    <version>8.2.0</version>
+</dependency>

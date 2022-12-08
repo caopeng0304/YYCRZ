@@ -1,0 +1,3 @@
+com.sinosoft.ie.booster.workflow.feign.fallback.FlowDelegateApiFallback
+com.sinosoft.ie.booster.workflow.feign.fallback.FlowEngineApiFallback
+com.sinosoft.ie.booster.workflow.feign.fallback.FlowTaskApiFallback

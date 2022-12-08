@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormArchivalBorrowMapper">
+
+	<resultMap id="formArchivalBorrowMap" type="com.sinosoft.ie.booster.workflow.entity.FormArchivalBorrowEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="applyUser" column="apply_user"/>
+		<result property="borrowingDepartment" column="borrowing_department"/>
+		<result property="archivesName" column="archives_name"/>
+		<result property="archivalAttributes" column="Archival_Attributes"/>
+		<result property="borrowMode" column="borrow_mode"/>
+		<result property="applyReason" column="apply_reason"/>
+		<result property="archivesId" column="archives_id"/>
+		<result property="borrowingDate" column="borrowing_date"/>
+		<result property="returnDate" column="return_date"/>
+	</resultMap>
+</mapper>

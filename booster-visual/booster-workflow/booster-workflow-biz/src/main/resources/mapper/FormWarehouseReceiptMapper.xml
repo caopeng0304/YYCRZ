@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormWarehouseReceiptMapper">
+
+	<resultMap id="formWarehouseReceiptMap" type="com.sinosoft.ie.booster.workflow.entity.FormWarehouseReceiptEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="supplierName" column="supplier_name"/>
+		<result property="contactPhone" column="contact_phone"/>
+		<result property="warehouseCategory" column="warehouse_category"/>
+		<result property="warehouse" column="warehouse"/>
+		<result property="warehousePeople" column="warehouse_people"/>
+		<result property="deliveryNo" column="delivery_no"/>
+		<result property="warehouseNo" column="warehouse_no"/>
+		<result property="warehouseDate" column="warehouse_date"/>
+	</resultMap>
+</mapper>

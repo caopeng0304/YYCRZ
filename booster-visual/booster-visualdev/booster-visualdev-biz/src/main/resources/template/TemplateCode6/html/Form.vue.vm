@@ -1,0 +1,685 @@
+#macro(childTable $html)
+    <el-col :span="${html.config.span}">
+        <el-form-item label-width="0">
+        #if($html.config.showTitle== true)
+            <div class="BOOS-common-title">
+                <h2>${html.config.label}</h2>
+            </div>
+        #end
+            #set($hanList="${context.genInfo.toLowerAttr(${html.config.tableName})}")
+        <el-table :data="dataForm.${hanList}EntityList" size='mini'>
+            <el-table-column type="index" width="50" label="序号" align="center"/>
+            #foreach($htmlChild in ${html.config.children})
+                #if(${html.config.noShow}==false)
+                    #set($htmlChildLowerVModel=${context.genInfo.toLowerAttr(${htmlChild.vModel})})
+                    <el-table-column prop="$!{htmlChildLowerVModel}" label="${htmlChild.config.label}">
+                        <template slot-scope="scope">
+                            <${htmlChild.config.tag}#if($htmlChildLowerVModel) v-model="scope.row.${htmlChildLowerVModel}"#end
+                            #if(${htmlChild.config.tag}=='BOOSTreeSelect') :options="${htmlChildLowerVModel}Options" :props="${htmlChildLowerVModel}Props" #end
+                            #if($htmlChild.config.boosKey!='BOOSText')
+                                #if($htmlChild.placeholder) placeholder="${htmlChild.placeholder}" #end
+                            #else
+                                #if($htmlChild.config.defaultValue) value="${htmlChild.config.defaultValue}"#end
+                            #end
+                            #if($htmlChild.maxlength) :maxlength="${htmlChild.maxlength}" #end
+                            #if($htmlChild.readonly == true ) readonly #end
+                            #if($htmlChild.disabled == true ):disabled="${htmlChild.disabled}"#end
+                            #if($htmlChild.clearable == true ) clearable #end
+                            #if($htmlChild.prefixicon) prefix-icon='${htmlChild.prefixicon}' #end
+                            #if($htmlChild.suffixicon) suffix-icon='${htmlChild.suffixicon}' #end
+                            #if($htmlChild.style) :style='${htmlChild.style}'#end
+                            #if($htmlChild.showWordLimit == true ) ${htmlChild.showWordLimit} #end
+                            #if($htmlChild.size) size="${htmlChild.size}" #end
+                            #if($htmlChild.min) :min="${htmlChild.min}" #end
+                            #if($htmlChild.max) :max="${htmlChild.max}" #end
+                            #if($htmlChild.type) type="${htmlChild.type}" #end
+                            #if($htmlChild.autosize) :autosize='${htmlChild.autosize}' #end
+                            #if($htmlChild.step) :step="${htmlChild.step}" #end
+                            #if($htmlChild.stepstrictly==true) stepstrictly #end
+                            #if($htmlChild.textStyle) :textStyle='${htmlChild.textStyle}' #end
+                            #if($htmlChild.controlsposition) controls-position='${htmlChild.controlsposition}' #end
+                            #if($htmlChild.showChinese) :showChinese="${htmlChild.showChinese}" #end
+                            #if($htmlChild.showPassword) show-password #end
+                            #if($htmlChild.filterable==true) filterable #end
+                            #if($htmlChild.multiple) :multiple="${htmlChild.multiple}" #end
+                            #if($htmlChild.separator) separator="${htmlChild.separator}" #end
+                            #if($htmlChild.isrange==true) is-range #end
+                            #if($htmlChild.rangeseparator) range-separator="${htmlChild.rangeseparator}" #end
+                            #if($htmlChild.startplaceholder) start-placeholder="${htmlChild.startplaceholder}" #end
+                            #if($htmlChild.endplaceholder) end-placeholder="${htmlChild.endplaceholder}" #end
+                            #if($htmlChild.format) format="${htmlChild.format}" #end
+                            #if($htmlChild.colorformat) color-format="${htmlChild.colorformat}" #end
+                            #if($htmlChild.valueformat) value-format="${htmlChild.valueformat}" #end
+                            #if($htmlChild.activetext) active-text="${htmlChild.activetext}" #end
+                            #if($htmlChild.inactivetext) inactive-text="${htmlChild.inactivetext}" #end
+                            #if($htmlChild.activecolor) active-color="${htmlChild.activecolor}" #end
+                            #if($htmlChild.inactivecolor) inactive-color="${htmlChild.inactivecolor}" #end
+                            #if($htmlChild.activevalue) active-value="${htmlChild.activevalue}" #end
+                            #if($htmlChild.inactivevalue == "0") inactive-value="${htmlChild.inactivevalue}" #end
+                            #if($htmlChild.pickeroptions) :picker-options='${htmlChild.pickeroptions}'#end
+                            #if($htmlChild.showScore == true ) show-score #end
+                            #if($htmlChild.showText == true ) show-text #end
+                            #if($htmlChild.allowhalf == true ) allow-half #end
+                            #if($htmlChild.showAlpha == true ) show-alpha #end
+                            #if($htmlChild.showStops == true ) show-stops #end
+                            #if($htmlChild.range == true ) range #end
+                            #if($htmlChild.showTip == true ) :showTip="${htmlChild.showTip}" #end
+                            #if($htmlChild.accept) :accept="${htmlChild.accept}" #end
+                            #if($htmlChild.fileSize) :fileSize="${htmlChild.fileSize}" #end
+                            #if($htmlChild.sizeUnit) sizeUnit="${htmlChild.sizeUnit}" #end
+                            #if($htmlChild.limit) :limit="${htmlChild.limit}" #end
+                            #if($htmlChild.buttonText) buttonText="${htmlChild.buttonText}" #end
+                            #if($htmlChild.contentposition) content-position="${htmlChild.contentposition}" #end
+                            #if($htmlChild.level) level=${htmlChild.level} #end
+                            #if($htmlChild.config.boosKey=='cascader') :options="${htmlChildLowerVModel}Options" :props="${htmlChildLowerVModel}Props" #end>
+                            #if($htmlChild.config.boosKey=='checkbox'||$htmlChild.config.boosKey==
+                                'radio'||$htmlChild.config.boosKey=='select')
+                                #set($name="${htmlChild.config.props.label}")
+                                #set($id="${htmlChild.config.props.value}")
+                                #if($htmlChild.config.boosKey=='select')
+                                    <el-option v-for="(item, index) in ${htmlChildLowerVModel}Options" :key="index"
+                                               :label="item.${name}" :value="item.${id}" :disabled="item.disabled"
+                                               #if($htmlChild.config.border == true )border #end></el-option>
+                                #else
+                                    <el-${htmlChild.config.boosKey}#if($htmlChild.config.optionType==
+                                        "button")-button #end
+                                            v-for="(item, index) in ${htmlChildLowerVModel}Options" :key="index"
+                                            :label="item.${id}" :disabled="item.disabled"
+                                            #if($htmlChild.config.border == true )border #end>
+                                        {{item.${name}}}
+                                    </el-${htmlChild.config.boosKey}#if($htmlChild.config.optionType==
+                                        "button")-button #end>
+                                #end
+                            #end
+                            #if($htmlChild.config.boosKey!='checkbox' && $htmlChild.config.boosKey!=
+                                'radio' && $htmlChild.config.boosKey!='select')
+                                #if($htmlChild.slot.prepend)
+                                    <template slot="prepend">${htmlChild.slot.prepend}</template>
+                                #end
+                                #if($htmlChild.slot.append)
+                                    <template slot="append">${htmlChild.slot.append}</template>
+                                #end
+                            #end
+                            #if($htmlChild.config.boosKey=='divider')
+                                $!{htmlChild.slot.defaultName}
+                            #end
+                        </${htmlChild.config.tag}>
+                        </template>
+                    </el-table-column>
+                #end
+            #end
+            <el-table-column label="操作" width="50">
+                <template slot-scope="scope">
+                    <el-button size="mini" type="text" class="BOOS-table-delBtn"
+                               @click="handleDel${hanList}EntityList(scope.$index)">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div class="table-actions" @click="addHandle${hanList}EntityList()">
+            <el-button type="text" icon="el-icon-plus">新增</el-button>
+        </div>
+    </el-form-item>
+    </el-col>
+#end
+#macro(comField $html)
+    #if(${html.config.noShow}==false)
+        #set($htmlLowerVModel=${context.genInfo.toLowerAttr(${html.vModel})})
+    <el-col :span="${html.config.span}">
+        <el-form-item #if($html.config.showLabel && $html.config.showLabel == true)
+        #if($html.config.label) label="${html.config.label}"#end
+        #if($html.config.labelWidth) label-width="${html.config.labelWidth}px"#end#else label-width="0"#end
+        #if($htmlLowerVModel) prop="${htmlLowerVModel}" #end #if($html.config.required == true)required #end>
+        <${html.config.tag} #if($htmlLowerVModel) v-model="#if(${html.config.boosKey}=='uploadFz'||${html.config.boosKey}=='uploadImg')${htmlLowerVModel}List#elseif(${html.config.boosKey}=='cascader'||${html.config.boosKey}=='checkbox' || ${html.config.boosKey}=='address'||${html.config.boosKey}=='timeRange' || ${html.config.boosKey}=='dateRange')${htmlLowerVModel}#elseif(${html.config.boosKey}=='select'&&${html.multiple}=='true')${htmlLowerVModel}#else dataForm.${htmlLowerVModel}#end"#end
+        #if(${html.config.tag}=='BOOSTreeSelect') :options="${htmlLowerVModel}Options" :props="${htmlLowerVModel}Props" #end
+        #if($html.config.boosKey!='BOOSText')
+            #if($html.placeholder) placeholder="${html.placeholder}" #end
+        #else
+            #if($html.config.defaultValue) value="${html.config.defaultValue}"#end
+        #end
+        #if($html.maxlength) :maxlength="${html.maxlength}" #end
+        #if($html.readonly == true ) readonly #end
+        #if($html.disabled == true ):disabled="${html.disabled}"#end
+        #if($html.clearable == true ) clearable #end
+        #if($html.prefixicon) prefix-icon='${html.prefixicon}' #end
+        #if($html.suffixicon) suffix-icon='${html.suffixicon}' #end
+        #if($html.style) :style='${html.style}'#end
+        #if($html.showWordLimit == true ) ${html.showWordLimit} #end
+        #if($html.size) size="${html.size}" #end
+        #if($html.min) :min="${html.min}" #end
+        #if($html.max) :max="${html.max}" #end
+        #if($html.type) type="${html.type}" #end
+        #if($html.autosize) :autosize='${html.autosize}' #end
+        #if($html.step) :step="${html.step}" #end
+        #if($html.stepstrictly==true) stepstrictly #end
+        #if($html.textStyle) :textStyle='${html.textStyle}' #end
+        #if($html.controlsposition) controls-position='${html.controlsposition}' #end
+        #if($html.showChinese) :showChinese="${html.showChinese}" #end
+        #if($html.showPassword) show-password #end
+        #if($html.filterable==true) filterable #end
+        #if($html.multiple) :multiple="${html.multiple}" #end
+        #if($html.separator) separator="${html.separator}" #end
+        #if($html.isrange==true) is-range #end
+        #if($html.rangeseparator) range-separator="${html.rangeseparator}" #end
+        #if($html.startplaceholder) start-placeholder="${html.startplaceholder}" #end
+        #if($html.endplaceholder) end-placeholder="${html.endplaceholder}" #end
+        #if($html.format) format="${html.format}" #end
+        #if($html.colorformat) color-format="${html.colorformat}" #end
+        #if($html.valueformat) value-format="${html.valueformat}" #end
+        #if($html.activetext) active-text="${html.activetext}" #end
+        #if($html.inactivetext) inactive-text="${html.inactivetext}" #end
+        #if($html.activecolor) active-color="${html.activecolor}" #end
+        #if($html.inactivecolor) inactive-color="${html.inactivecolor}" #end
+        #if($html.activevalue) active-value="${html.activevalue}" #end
+        #if($html.inactivevalue == "0") inactive-value="${html.inactivevalue}" #end
+        #if($html.pickeroptions) :picker-options='${html.pickeroptions}'#end
+        #if($html.showScore == true ) show-score #end
+        #if($html.showText == true ) show-text #end
+        #if($html.allowhalf == true ) allow-half #end
+        #if($html.showAlpha == true ) show-alpha #end
+        #if($html.showStops == true ) show-stops #end
+        #if($html.range == true ) range #end
+        #if($html.showTip == true ) :showTip="${html.showTip}" #end
+        #if($html.accept) :accept="${html.accept}" #end
+        #if($html.fileSize) :fileSize="${html.fileSize}" #end
+        #if($html.sizeUnit) sizeUnit="${html.sizeUnit}" #end
+        #if($html.limit) :limit="${html.limit}" #end
+        #if($html.buttonText) buttonText="${html.buttonText}" #end
+        #if($html.contentposition) content-position="${html.contentposition}" #end
+        #if($html.level) level=${html.level} #end
+        #if($html.config.boosKey=='cascader') :options="${htmlLowerVModel}Options" :props="${htmlLowerVModel}Props" #end >
+        #if($html.config.boosKey=='checkbox'||$html.config.boosKey=='radio'||$html.config.boosKey=='select')
+            #set($name="${html.config.props.label}")
+            #set($id="${html.config.props.value}")
+            #if($html.config.boosKey=='select')
+                <el-option v-for="(item, index) in ${htmlLowerVModel}Options" :key="index" :label="item.${name}"
+                           :value="item.${id}" :disabled="item.disabled"
+                           #if($html.config.border == true )border #end></el-option>
+            #else
+                <el-${html.config.boosKey}#if($html.config.optionType=="button")-button #end
+                        v-for="(item, index) in ${htmlLowerVModel}Options" :key="index" :label="item.${id}"
+                        :disabled="item.disabled" #if($html.config.border == true )border #end>
+                    {{item.${name}}}
+                </el-${html.config.boosKey}#if($html.config.optionType=="button")-button #end>
+            #end
+        #end
+        #if($html.config.boosKey!='checkbox' && $html.config.boosKey!='radio' && $html.config.boosKey!='select')
+            #if($html.slot.prepend)
+                <template slot="prepend">${html.slot.prepend}</template>
+            #end
+            #if($html.slot.append)
+                <template slot="append">${html.slot.append}</template>
+            #end
+        #end
+        #if($html.config.boosKey=='divider')
+            $!{html.slot.defaultName}
+        #end
+    </${html.config.tag}>
+        </el-form-item>
+    </el-col>
+    #end
+#end
+#macro(shange $sfield)
+    #foreach($html in ${sfield})
+        #set($boosKey =${html.config.boosKey})
+        #if(${boosKey}=='row')
+    <el-col :span="24">
+        <el-row :gutter="${context.gutter}">
+            #set($children=$!{html.config.children})
+    #if(${children})
+            #set($shange = "#shange($children)" )
+            ${shange}
+        #end
+        </el-row>
+    </el-col>
+        #elseif(${boosKey}=='card')
+    <el-col :span="24">
+        <el-card class="box-card" shadow="${html.shadow}">
+            #set($children=$!{html.config.children})
+    #if(${children})
+            #set($kapian = "#kapian($children)" )
+            ${kapian}
+        #end
+        </el-card>
+    </el-col>
+        #elseif(${boosKey}=='table')
+            #set($childTable = "#childTable($html)" )
+${childTable}
+        #elseif(!${html.config.vModel})
+            #set($comField = "#comField($html)" )
+${comField}
+        #end
+    #end
+#end
+#macro(kapian $sfield)
+    #foreach($html in ${sfield})
+        #set($boosKey =${html.config.boosKey} )
+        #if(${boosKey}=='row')
+<el-col :span="24">
+    <el-row :gutter="${context.gutter}">
+        #set($children=$!{html.config.children})
+#if(${children})
+        #set($shange = "#shange($children)" )
+        ${shange}
+    #end
+    </el-row>
+</el-col>
+        #elseif(${boosKey}=='card')
+<el-col :span="24">
+    <el-card class="box-card" shadow="${html.shadow}">
+        #set($children=$!{html.config.children})
+#if(${children})
+        #set($kapian = "#kapian($children)" )
+        ${kapian}
+    #end
+    </el-card>
+</el-col>
+        #elseif(${boosKey}=='table')
+            #set($childTable = "#childTable($html)" )
+${childTable}
+        #elseif(!${html.config.vModel})
+            #set($comField = "#comField($html)" )
+${comField}
+        #end
+    #end
+#end
+<template>
+    #set($pKeyName = "${context.pKeyName}")
+    #if(${pKeyName.substring(0,2).toLowerCase()}=='f_')
+        #set($peimaryKeyname = "${pKeyName.substring(2).toLowerCase()}")
+    #else
+        #set($peimaryKeyname = "${pKeyName.toLowerCase()}")
+    #end
+    #if(${context.popupType}=='general')
+    <el-dialog :title="!${context.formModel}.${peimaryKeyname} ? '新建' :  isDetail ? '详情':'编辑'"
+               :close-on-click-modal="false"
+               :visible.sync="visible" class="BOOS-dialog BOOS-dialog_center" lock-scroll
+               :fullscreen="true"
+               :before-close="handleClose"
+               width="${context.generalWidth}">
+    <el-row :gutter="${context.gutter}" class="${context.formStyle}" v-if="!loading">
+    #elseif(${context.popupType}=='fullScreen')
+    <transition name="el-zoom-in-center">
+    <div class="BOOS-preview-main">
+        <div class="BOOS-common-page-header">
+            <el-page-header @back="goBack"
+                            :content="!${context.formModel}.${peimaryKeyname} ? '新建' :  isDetail ? '详情':'编辑'"/>
+            <div class="options">
+                <el-button type="primary" @click="dataFormSubmit()" v-if="!isDetail">#if(${context.confirmButtonText})${context.confirmButtonText}#else 保 存#end</el-button>
+                <el-button @click="goBack">#if(${context.cancelButtonText})${context.cancelButtonText}#else 取 消#end</el-button>
+            </div>
+        </div>
+    <el-row :gutter="${context.gutter}" class="${context.formStyle} main" :style="{margin: '0 auto',width: '${context.fullScreenWidth}'}">
+    #end
+    <el-form ref="${context.formRef}" :model="${context.formModel}" :rules="${context.formRules}" size="${context.size}" label-width="${context.labelWidth}px" label-position="${context.labelPosition}"
+        #if($context.disabled == true ) :disabled="${context.disabled}" #else  :disabled="!!isDetail" #end>
+        #foreach($html in ${context.htmlFields})
+            #set($boosKey =${html.config.boosKey} )
+            #if(${boosKey}=='row')
+        <el-col :span="24">
+            <el-row :gutter="${context.gutter}">
+                #set($children=$!{html.config.children})
+#if(${children})
+                #set($shange = "#shange($children)" )
+                ${shange}
+            #end
+            </el-row>
+        </el-col>
+            #elseif(${boosKey}=='card')
+        <el-col :span="24">
+            <el-card class="box-card" shadow="${html.shadow}">
+                #set($children=$!{html.config.children})
+#if(${children})
+                #set($kapian = "#kapian($children)" )
+                ${kapian}
+            #end
+            </el-card>
+        </el-col>
+            #elseif(${boosKey}=='table')
+                #set($childTable = "#childTable($html)" )
+        ${childTable}
+            #elseif(!${html.config.vModel})
+                #set($comField = "#comField($html)" )
+        ${comField}
+            #end
+        #end
+    </el-form>
+</el-row>
+    #if(${context.popupType}=='general')
+    <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">#if(${context.cancelButtonText})${context.cancelButtonText}#else 取 消#end</el-button>
+        <el-button type="primary" @click="dataFormSubmit()" v-if="!isDetail">#if(${context.confirmButtonText})${context.confirmButtonText}#else 确 定#end</el-button>
+    </span>
+    #end
+    #if(${context.popupType}=='general')
+    </el-dialog>
+    #elseif(${context.popupType}=='fullScreen')
+    </div>
+</transition>
+    #end
+</template>
+<script>
+    import request from '@/router/axios'
+    import {getDictionaryDataSelector} from '@/api/systemData/dictionary'
+    import {previewDataInterface} from '@/api/systemData/dataInterface'
+
+    export default {
+        components: {},
+        props: [],
+        data() {
+            return {
+                loading:false,
+                visible: false,
+                isDetail: false,
+                dataForm: {
+            #foreach($html in ${context.fields})
+                #set($htmlLowerVModel=${context.genInfo.toLowerAttr(${html.vModel})})
+                #set($boosKey =${html.config.boosKey})
+                #if(${html.config.boosKey}=='cascader'||${html.config.boosKey}=='checkbox' || ${html.config.boosKey}=='address'||${html.config.boosKey}=='timeRange' || ${html.config.boosKey}=='dateRange')
+                        $!{htmlLowerVModel} : "",
+                #elseif(${html.config.boosKey}=='select')
+                        $!{htmlLowerVModel} : "",
+                #elseif($html.config.boosKey!='BOOSText' && $html.config.boosKey!='divider')
+                    #if($!html.config.valueType=='String')
+                        $!{htmlLowerVModel} :"$!{html.config.defaultValue}",
+                    #elseif($!html.config.valueType=='undefined')
+                        $!{htmlLowerVModel} :undefined,
+                    #else
+                        $!{htmlLowerVModel} : $!{html.config.defaultValue},
+                    #end
+                #end
+            #end
+        },
+            rules: {
+                #foreach($html in ${context.fields})
+                    #set($htmlLowerVModel=${context.genInfo.toLowerAttr(${html.vModel})})
+                    #set($boosKey =${html.config.boosKey} )
+                    #if($html.config.boosKey!='BOOSText' && $html.config.boosKey!='divider')
+                        #set($listSize=$!{html.config.regList})
+                        #set($defaultValue=${html.config.defaultValue})
+                        #set($defaultValueSize=$!{html.config.defaultValue})
+                        #if(!$html.config.defaultValue && $html.config.defaultValue==[])
+                            #set($messages='请至少选择一个')
+                        #elseif(${html.config.defaultValue} && (${defaultValueSize} || $defaultValueSize.size()>0))
+                            #set($messages='请至少选择一个')
+                        #elseif($html.placeholder)
+                            #set($messages=${html.placeholder})
+                        #else
+                            #set($messages='不能为空')
+                        #end
+                        #if($html.config.required==true||(${listSize}&&$listSize.size()>0))
+                            ${htmlLowerVModel}:
+                            [
+                                #set($trigger = ${html.config.trigger})
+                                #if(${trigger.substring(0,1)}!='[')
+                                    #set($trigger = "'"+ ${html.config.trigger}+ "'")
+                                #end
+                                #if($html.config.required==true)
+                                    {
+                                        required: true,
+                                        message: '$!{messages}',
+                                        trigger:${trigger},
+                                    },
+                                    #if($listSize.size()>0)
+                                        #foreach($regList in ${html.config.regList})
+                                            {
+                                                pattern:${regList.pattern},
+                                                message: '${regList.message}',
+                                                trigger: ${trigger}
+                                            },
+                                        #end
+                                    #end
+                                #end
+                            ],#end
+                    #end
+                #end
+            },
+            #foreach($html in ${context.fields})
+                #set($htmlLowerVModel=${context.genInfo.toLowerAttr(${html.vModel})})
+                #set($boosKey =${html.config.boosKey} )
+                #if(${boosKey}=="table")
+                    #foreach($htmlChild in ${html.config.children})
+                        #set($htmlChildLowerVModel=${context.genInfo.toLowerAttr(${htmlChild.vModel})})
+                        #if(${htmlChild.config.dataType}=='dictionary'||${htmlChild.config.dataType}=='dynamic')
+                            ${htmlChildLowerVModel}Options:[],
+                        #elseif($htmlChild.options)
+                                    ${htmlChildLowerVModel}Options:${htmlChild.options},
+                                    ${htmlChildLowerVModel}Props:${htmlChild.props.props},
+                        #end
+                    #end
+                #else
+                    #if(${html.config.dataType}=='dictionary'||${html.config.dataType}=='dynamic')
+                        ${htmlLowerVModel}Options:[],
+                    #elseif($html.slot.options)
+                                ${htmlLowerVModel}Options:${html.slot.options},
+                    #elseif(${boosKey}=='uploadFz'||${boosKey}=='uploadImg')
+                        ${htmlLowerVModel}List:[],
+                        ${htmlLowerVModel}:[],
+                    #end
+                    #if((${html.config.boosKey}=='select'&&${html.multiple}=='true')||${html.config.boosKey}=='cascader'||${html.config.boosKey}=='checkbox' || ${html.config.boosKey}=='address'||${html.config.boosKey}=='timeRange' || ${html.config.boosKey}=='dateRange')
+                        ${htmlLowerVModel}:[],
+                    #end
+                #end
+                #if($html.options)
+                        ${htmlLowerVModel}Options:${html.options},
+                #end
+                #if($html.Props)
+                        ${htmlLowerVModel}Props:${html.Props.Props},
+                #end
+            #end
+        }
+        },
+        computed: {},
+        watch: {},
+        created() {
+            #foreach($html in ${context.fields})
+                #set($htmlLowerVModel=${context.genInfo.toLowerAttr(${html.vModel})})
+                #set($boosKey =${html.config.boosKey} )
+                #if(${boosKey}=="table")
+                    #foreach($htmlChild in ${html.config.children})
+                        #set($htmlChildLowerVModel=${context.genInfo.toLowerAttr(${htmlChild.vModel})})
+                        #if(${htmlChild.config.dataType}=='dictionary'||${htmlChild.config.dataType}=='dynamic')
+                            this.get${htmlChildLowerVModel}Options();
+                        #end
+                    #end
+                #else
+                    #if(${html.config.dataType}=='dictionary'||${html.config.dataType}=='dynamic')
+                        this.get${htmlLowerVModel}Options();
+                    #end
+                #end
+            #end
+        },
+        mounted() {
+        },
+        methods: {
+            #foreach($html in ${context.fields})
+                #set($htmlLowerVModel=${context.genInfo.toLowerAttr(${html.vModel})})
+                #set($boosKey =${html.config.boosKey} )
+                #if(${boosKey}=="table")
+                    #foreach($htmlChild in ${html.config.children})
+                        #set($htmlChildLowerVModel=${context.genInfo.toLowerAttr(${htmlChild.vModel})})
+                        #if(${htmlChild.config.dataType}=='dictionary')
+                            get${htmlChildLowerVModel}Options() {
+                                getDictionaryDataSelector('${htmlChild.config.dictionaryType}').then(res => {
+                                    this.${htmlChildLowerVModel}Options = res.data.data
+                                })
+                            },
+                        #elseif(${htmlChild.config.dataType}=='dynamic')
+                            get${htmlChildLowerVModel}Options() {
+                                previewDataInterface('${htmlChild.config.propsUrl}').then(res => {
+                                    this.${htmlChildLowerVModel}Options = res.data.data
+                                })
+                            },
+                        #end
+                    #end
+                #else
+                    #if(${html.config.dataType}=='dictionary')
+                        get${htmlLowerVModel}Options() {
+                            getDictionaryDataSelector('${html.config.dictionaryType}').then(res => {
+                                this.${htmlLowerVModel}Options = res.data.data
+                            })
+                        },
+                    #elseif(${html.config.dataType}=='dynamic')
+                        get${htmlLowerVModel}Options() {
+                            previewDataInterface('${html.config.propsUrl}').then(res => {
+                                this.${htmlLowerVModel}Options = res.data.data
+                            })
+                        },
+                    #end
+                #end
+            #end
+            #set($ref = "${context.formRef}")
+            #set($l = "'")
+            #set($c = "[")
+            #set($p = "]")
+            #if(${context.popupType}=='fullScreen')
+                goBack() {
+                    this.$emit('refresh')
+                },
+            #end
+            init(id, isDetail) {
+                #foreach($html in ${context.fields})
+                    #set($htmlLowerVModel=${context.genInfo.toLowerAttr(${html.vModel})})
+                    #set($boosKey =${html.config.boosKey} )
+                    #if(${boosKey}=='table')
+                        this.dataForm.${htmlLowerVModel}= [];
+                    #end
+                #end
+                this.${context.formModel}.${peimaryKeyname} = id || 0;
+                this.visible = true;
+                this.isDetail = isDetail || false;
+                this.$nextTick(() => {
+                    this.$refs${c}${l}${ref}${l}${p}.resetFields();
+                    if (this.${context.formModel}.${peimaryKeyname}) {
+                        this.loading=true
+                        request({
+                            url: '/${context.module}/${context.className}/' + this.${context.formModel}.${peimaryKeyname},
+                            method: 'get'
+                        }).then(res => {
+                            this.${context.formModel} = res.data.data
+                            #foreach($html in ${context.fields})
+                                #set($htmlLowerVModel=${context.genInfo.toLowerAttr(${html.vModel})})
+                                #if(${html.config.boosKey}=="uploadFz" || ${html.config.boosKey}=="uploadImg")
+                                    this.${htmlLowerVModel}List = this.dataForm.${htmlLowerVModel}? JSON.parse(this.dataForm.${htmlLowerVModel}) : []
+                                #elseif(${html.config.boosKey}=='cascader'||${html.config.boosKey}=='checkbox' || ${html.config.boosKey}=='address'||${html.config.boosKey}=='timeRange' || ${html.config.boosKey}=='dateRange')
+                                    this.${htmlLowerVModel} = this.dataForm.${htmlLowerVModel}? this.dataForm.${htmlLowerVModel}.split(","):[]
+                                #elseif(${html.config.boosKey}=='select')
+                                    #if(${html.multiple}=='true')
+                                    this.${htmlLowerVModel}= this.${context.formModel}.${htmlLowerVModel} ? this
+                                    .${context.formModel}.${htmlLowerVModel}.split(','):[]
+                                    #end
+                                #elseif(${html.config.boosKey}=='slider')
+                                #elseif(${html.config.boosKey}=='table')
+                                    this.dataForm.${htmlLowerVModel}= this.dataForm.${htmlLowerVModel}? this.dataForm.${htmlLowerVModel}: []
+                                #end
+                            #end
+
+                        }).finally(()=>{
+                          this.loading=false
+                        })
+                    }
+                })
+            },
+            // 表单提交
+            dataFormSubmit() {
+                #foreach($html in ${context.fields})
+                    #set($htmlLowerVModel=${context.genInfo.toLowerAttr(${html.vModel})})
+                    #if(${html.config.boosKey}=='cascader'||${html.config.boosKey}=='checkbox' || ${html.config.boosKey}=='address'||${html.config.boosKey}=='timeRange' || ${html.config.boosKey}=='dateRange')
+                        this.${context.formModel}.${htmlLowerVModel}= this.${htmlLowerVModel}.join(',');
+                    #elseif(${html.config.boosKey}=="uploadFz" || ${html.config.boosKey}=="uploadImg")
+                        this.$set(this.${context.formModel}, '${htmlLowerVModel}',this.${htmlLowerVModel}List.length ? JSON.stringify(this.${htmlLowerVModel}List):"");
+                    #elseif(${html.config.boosKey}=='select' )
+                        #if(${html.multiple}=='true')
+                            this.${context.formModel}.${htmlLowerVModel}= this.${htmlLowerVModel}.join(',');
+                        #end
+                    #elseif(${html.config.boosKey}=='slider')    
+                    #elseif(${html.config.boosKey}=='table')
+                        #foreach($htmlChild in ${html.config.children})
+                            #set($htmlChildLowerVModel=${context.genInfo.toLowerAttr(${htmlChild.vModel})})
+                            #if(${htmlChild.config.boosKey}=='cascader'||${htmlChild.config.boosKey}=='checkbox' || ${htmlChild.config.boosKey}=='address'||${htmlChild.config.boosKey}=='timeRange' || ${htmlChild.config.boosKey}=='dateRange')
+                                this.${context.formModel}.${context.genInfo.toLowerAttr(${html.config.tableName})}EntityList.forEach((item)=> {
+                                    item.${htmlChildLowerVModel} = Array.isArray(item.${htmlChildLowerVModel})?item.${htmlChildLowerVModel}.join(','):item.${htmlChildLowerVModel};
+                                })
+                            #elseif(${htmlChild.config.boosKey}=='select' )
+                                #if(${htmlChild.multiple}=='true')
+                                    this.${context.formModel}.${html.config.tableName}EntityList.forEach((item)=> {
+                                        item.${htmlChildLowerVModel} = Array.isArray(item.${htmlChildLowerVModel})?item.${htmlChildLowerVModel}.join(','):item.${htmlChildLowerVModel};
+                                    })
+                                #end
+                            #end
+                        #end
+                    #end
+                #end
+                this.$refs${c}${l}${ref}${l}${p}.validate((valid) => {
+                    if (valid) {
+                        if (!this.${context.formModel}.${peimaryKeyname}) {
+                            request({
+                                url: `/${context.module}/${context.className}`,
+                                method: 'post',
+                                data: this.${context.formModel},
+                            }).then((res) => {
+                                this.$message({
+                                    message: res.data.msg,
+                                    type: 'success',
+                                    duration: 1000,
+                                    onClose: () => {
+                                        this.visible = false,
+                                                this.$emit('refresh', true)
+                                    }
+                                })
+                            })
+                        } else {
+                            request({
+                                url: '/${context.module}/${context.className}/' + this.${context.formModel}.${peimaryKeyname},
+                                method: 'PUT',
+                                data: this.${context.formModel}
+                            }).then((res) => {
+                                this.$message({
+                                    message: res.data.msg,
+                                    type: 'success',
+                                    duration: 1000,
+                                    onClose: () => {
+                                        this.visible = false
+                                        this.$emit('refresh', true)
+                                    }
+                                })
+                            })
+                        }
+                    }
+                })
+            },
+            // 关闭弹窗
+            handleClose() {
+                this.visible = false,
+                this.$emit('refresh', true)
+            },
+    #foreach($html in ${context.fields})
+        #set($htmlLowerVModel=${context.genInfo.toLowerAttr(${html.vModel})})
+        #set($boosKey =${html.config.boosKey} )
+        #if(${boosKey}=='table')
+            addHandle${htmlLowerVModel}() {
+                let item = {
+                #foreach($html in ${context.fields})
+                    #set($boosKey =${html.config.boosKey} )
+                    #if(${boosKey}=="table")
+                        #foreach($html in ${html.config.children})
+                            ${context.genInfo.toLowerAttr(${html.vModel})}:
+                            undefined,
+                        #end
+                    #end
+                #end
+            }
+                this.dataForm.${htmlLowerVModel}.push(item)
+            },
+            handleDel${htmlLowerVModel}(index) {
+                this.dataForm.${htmlLowerVModel}.splice(index, 1);
+            },
+        #end
+    #end
+        }
+    }
+</script>
+
+
+
+

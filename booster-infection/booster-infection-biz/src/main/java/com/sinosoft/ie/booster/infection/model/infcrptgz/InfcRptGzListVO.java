@@ -1,0 +1,157 @@
+package com.sinosoft.ie.booster.infection.model.infcrptgz;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+/**
+ *
+ * InfcRptGz模型
+ * @版本： V1.0.0
+ * @作者： booster开发平台组
+ * @日期： 2022-01-06 16:52:51
+ */
+@Data
+@ApiModel(value = "InfcRptGz模型")
+public class InfcRptGzListVO{
+
+    /**
+     * 主键
+     */
+    @ApiModelProperty(value = "主键")
+    private String id;
+
+    /**
+     * 患者姓名
+     */
+    @ApiModelProperty(value = "患者姓名")
+    private String patientName;
+
+    /**
+     * 身份证件号码
+     */
+    @ApiModelProperty(value = "身份证件号码")
+    private String idNo;
+
+    /**
+     * 性别代码
+     */
+    @ApiModelProperty(value = "性别代码")
+    private String gedCode;
+
+    /**
+     * 出生日期
+     */
+    @ApiModelProperty(value = "出生日期")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date birthdate;
+
+    /**
+     * 户籍代码
+     */
+    @ApiModelProperty(value = "户籍代码")
+    private String hregTypeCode;
+
+    /**
+     * 户籍地区代码
+     */
+    @ApiModelProperty(value = "户籍地区代码")
+    private String hergAreaCode;
+
+    /**
+     * 户籍详细地址
+     */
+    @ApiModelProperty(value = "户籍详细地址")
+    private String hregAddrDetl;
+
+    /**
+     * 工作单位/学校名称
+     */
+    @ApiModelProperty(value = "工作单位/学校名称")
+    private String orgSchName;
+
+    /**
+     * 人群分类代码
+     */
+    @ApiModelProperty(value = "人群分类代码")
+    private String popuTypeCode;
+
+    /**
+     * 联系人/监护人电话号码
+     */
+    @ApiModelProperty(value = "联系人/监护人电话号码")
+    private String cntaTel;
+
+    /**
+     * 报告地区代码
+     */
+    @ApiModelProperty(value = "报告地区代码")
+    private String rptAreaCode;
+
+    /**
+     * 报告单位代码
+     */
+    @ApiModelProperty(value = "报告单位代码")
+    private String rptOrgCode;
+
+    /**
+     * 报告日期
+     */
+    @ApiModelProperty(value = "报告日期")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date repDate;
+
+    /**
+     * 发病日期
+     */
+    @ApiModelProperty(value = "发病日期")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date illBegDate;
+
+    /**
+     * 诊断日期时间
+     */
+    @ApiModelProperty(value = "诊断日期时间")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date diagDate;
+
+    /**
+     * 疾病诊断代码
+     */
+    @ApiModelProperty(value = "疾病诊断代码")
+    private String diagDiseCode;
+
+    /**
+     * 诊断状态
+     */
+    @ApiModelProperty(value = "诊断状态")
+    private String diagStaTypeCode;
+
+    /**
+     * 病例分类
+     */
+    @ApiModelProperty(value = "病例分类")
+    private String caseTypeCode;
+
+    /**
+     * 死亡日期
+     */
+    @ApiModelProperty(value = "死亡日期")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date dieDate;
+
+    /**
+     * 医师姓名
+     */
+    @ApiModelProperty(value = "医师姓名")
+    private String drName;
+
+    /**
+     * 备注
+     */
+    @ApiModelProperty(value = "备注")
+    private String rmk;
+
+}

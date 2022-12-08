@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.visualdev.mapper.BaseCommonFieldsMapper">
+
+  <resultMap id="baseCommonFieldsMap" type="com.sinosoft.ie.booster.visualdev.entity.BaseCommonFieldsEntity">
+                  <id property="id" column="id"/>
+                        <result property="fieldName" column="field_name"/>
+                        <result property="fieldComment" column="field_comment"/>
+                        <result property="dataType" column="data_type"/>
+                        <result property="dataLength" column="data_length"/>
+                        <result property="allowNull" column="allow_null"/>
+                        <result property="description" column="description"/>
+                        <result property="sort" column="sort"/>
+                        <result property="enabledFlag" column="enabled_flag"/>
+                        <result property="delFlag" column="del_flag"/>
+                        <result property="createTime" column="create_time"/>
+                        <result property="createBy" column="create_by"/>
+                        <result property="updateTime" column="update_time"/>
+                        <result property="updateBy" column="update_by"/>
+            </resultMap>
+</mapper>

@@ -1,0 +1,17 @@
+package ${package.Mapper};
+
+import ${package.Entity}.${table.entityName};
+import ${superMapperClassPackage};
+import org.apache.ibatis.annotations.Mapper;
+
+/**
+ *
+ * ${genInfo.description}
+ * 版本： ${genInfo.version}
+ * 作者： ${genInfo.createUser}
+ * 日期： ${genInfo.createDate}
+ */
+@Mapper
+public interface ${table.mapperName} extends ${superMapperClass}<${table.entityName}> {
+
+}

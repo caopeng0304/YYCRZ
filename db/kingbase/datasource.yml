@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.kingbase8.Driver
+    username: SYSTEM
+    password: SYSTEM
+    url: jdbc:kingbase8://192.168.2.140:54321/booster

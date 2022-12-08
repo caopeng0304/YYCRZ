@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormSalesOrderMapper">
+
+	<resultMap id="formSalesOrderMap" type="com.sinosoft.ie.booster.workflow.entity.FormSalesOrderEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="salesMan" column="sales_man"/>
+		<result property="customerName" column="customer_name"/>
+		<result property="contacts" column="contacts"/>
+		<result property="contactPhone" column="contact_phone"/>
+		<result property="customerAddress" column="customer_address"/>
+		<result property="ticketNum" column="ticket_num"/>
+		<result property="invoiceType" column="invoice_type"/>
+		<result property="paymentMethod" column="payment_method"/>
+		<result property="paymentMoney" column="payment_money"/>
+		<result property="salesDate" column="sales_date"/>
+		<result property="fileJson" column="file_json"/>
+		<result property="description" column="description"/>
+		<result property="ticketDate" column="ticket_date"/>
+	</resultMap>
+</mapper>

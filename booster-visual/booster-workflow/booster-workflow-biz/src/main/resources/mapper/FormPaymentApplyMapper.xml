@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormPaymentApplyMapper">
+
+	<resultMap id="formPaymentApplyMap" type="com.sinosoft.ie.booster.workflow.entity.FormPaymentApplyEntity">
+		<id property="id" column="id"/>
+		<result property="flowId" column="flow_id"/>
+		<result property="flowTitle" column="flow_title"/>
+		<result property="flowUrgent" column="flow_urgent"/>
+		<result property="billNo" column="bill_no"/>
+		<result property="applyUser" column="apply_user"/>
+		<result property="departmental" column="departmental"/>
+		<result property="purposeName" column="purpose_name"/>
+		<result property="projectCategory" column="project_category"/>
+		<result property="projectLeader" column="project_leader"/>
+		<result property="openingBank" column="opening_bank"/>
+		<result property="beneficiaryAccount" column="beneficiary_account"/>
+		<result property="receivableContact" column="receivable_contact"/>
+		<result property="paymentUnit" column="payment_unit"/>
+		<result property="applyAmount" column="apply_amount"/>
+		<result property="settlementMethod" column="settlement_method"/>
+		<result property="paymentType" column="payment_type"/>
+		<result property="amountPaid" column="amount_paid"/>
+		<result property="description" column="description"/>
+		<result property="applyDate" column="apply_date"/>
+	</resultMap>
+</mapper>

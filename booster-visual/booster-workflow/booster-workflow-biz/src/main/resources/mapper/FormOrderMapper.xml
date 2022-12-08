@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FormOrderMapper">
+
+  <resultMap id="formOrderMap" type="com.sinosoft.ie.booster.workflow.entity.FormOrderEntity">
+                  <id property="id" column="id"/>
+                        <result property="customerId" column="customer_id"/>
+                        <result property="customerName" column="customer_name"/>
+                        <result property="salesManId" column="sales_man_id"/>
+                        <result property="salesManName" column="sales_man_name"/>
+                        <result property="orderDate" column="order_date"/>
+                        <result property="orderCode" column="order_code"/>
+                        <result property="transportMode" column="transport_mode"/>
+                        <result property="deliveryDate" column="delivery_date"/>
+                        <result property="deliveryAddress" column="delivery_address"/>
+                        <result property="paymentMode" column="payment_mode"/>
+                        <result property="receivableMoney" column="receivable_money"/>
+                        <result property="earnestRate" column="earnest_rate"/>
+                        <result property="prepayEarnest" column="prepay_earnest"/>
+                        <result property="currentState" column="current_state"/>
+                        <result property="fileJson" column="file_json"/>
+                        <result property="description" column="description"/>
+                        <result property="sort" column="sort"/>
+                        <result property="enabledFlag" column="enabled_flag"/>
+                        <result property="delFlag" column="del_flag"/>
+                        <result property="createTime" column="create_time"/>
+                        <result property="createBy" column="create_by"/>
+                        <result property="updateTime" column="update_time"/>
+                        <result property="updateBy" column="update_by"/>
+            </resultMap>
+</mapper>

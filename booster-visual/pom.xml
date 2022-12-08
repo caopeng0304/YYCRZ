@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>booster-cloud</artifactId>
+		<groupId>com.sinosoft</groupId>
+		<version>1.0.1</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>booster-visual</artifactId>
+	<packaging>pom</packaging>
+	<description>booster 图形化相关功能</description>
+
+	<modules>
+		<module>booster-monitor</module>
+		<module>booster-sentinel-dashboard</module>
+		<module>booster-xxl-job-admin</module>
+        <module>booster-visualdev</module>
+        <module>booster-workflow</module>
+        <module>booster-datareport</module>
+    </modules>
+
+</project>

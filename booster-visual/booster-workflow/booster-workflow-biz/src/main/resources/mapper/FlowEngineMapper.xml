@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinosoft.ie.booster.workflow.mapper.FlowEngineMapper">
+
+	<resultMap id="flowEngineMap" type="com.sinosoft.ie.booster.workflow.entity.FlowEngineEntity">
+		<id property="id" column="id"/>
+		<result property="encode" column="encode"/>
+		<result property="fullName" column="full_name"/>
+		<result property="type" column="type"/>
+		<result property="category" column="category"/>
+		<result property="formType" column="form_type"/>
+		<result property="form" column="form"/>
+		<result property="refTables" column="ref_tables"/>
+		<result property="visibleType" column="visible_type"/>
+		<result property="icon" column="icon"/>
+		<result property="iconBackground" column="icon_background"/>
+		<result property="version" column="version"/>
+		<result property="flowTemplateJson" column="flow_template_json"/>
+		<result property="formTemplateJson" column="form_template_json"/>
+		<result property="description" column="description"/>
+		<result property="sort" column="sort"/>
+		<result property="enabledFlag" column="enabled_flag"/>
+		<result property="delFlag" column="del_flag"/>
+		<result property="createTime" column="create_time"/>
+		<result property="createBy" column="create_by"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="updateBy" column="update_by"/>
+	</resultMap>
+</mapper>

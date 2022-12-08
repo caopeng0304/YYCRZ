@@ -1,0 +1,64 @@
+package ${package.Entity};
+
+#if(${entityLombokModel})
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+#end
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ *
+ * ${table.comment}
+ * @版本： ${genInfo.version}
+ * @作者： ${genInfo.createUser}
+ * @日期： ${genInfo.createDate}
+ */
+#if(${entityLombokModel})
+@Data
+#end
+#if(${table.convert})
+@TableName("${table.name}")
+#end
+@ApiModel(value = "${table.comment}")
+#if(${superEntityClass})
+public class ${table.entity} extends ${superEntityClass}#if(${activeRecord})<${table.entity}>#end {
+#elseif(${activeRecord})
+public class ${table.entity} extends Model<${table.entity}> {
+#else
+public class ${table.entityName}  {
+#end
+#foreach($field in ${table.fields})
+    #set($TableField = "${field.name}")
+
+    /**
+     * ${field.comment}
+     */
+    @ApiModelProperty(value = "${field.comment}")
+    #if(${TableField}==$!{pKeyName})
+    @TableId(type = IdType.ASSIGN_ID)
+    private Long ${genInfo.toLowerAttr(${TableField})};
+    #else
+    #set($type=${field.type.toLowerCase()})
+    #if(${type} =='localdatetime' || ${type} =='date'|| ${type} =='datetime'|| ${type} =='datetime2')
+    #set($type="Date")
+    #elseif(${type} =='nvarchar'||${type} =='nvarchar(max)'||${type} =='varchar'||${type} =='longtext'||${type} =='text')
+    #set($type="String")
+    #elseif(${type}=='int'||${type}=='number')
+    #set($type="Integer")
+    #elseif(${type}=='bigint'||${type}=='long')
+    #set($type="Long")
+    #elseif(${type}=='big_decimal')
+    #set($type="BigDecimal")
+    #else
+    #set($type="String")
+    #end
+    private ${type} ${genInfo.toLowerAttr(${TableField})};
+    #end
+#end
+}

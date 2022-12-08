@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinosoft.ie.booster.yypass.mapper.PersonTransferMapper">
+
+
+	<select id="getPersonTransferByPersonId" resultType="com.sinosoft.ie.booster.yypass.entity.PersonTransferEntity"
+			parameterType="java.lang.String">
+		select * from person_transfer where person_id = #{person_id}
+	</select>
+
+	<select id="getPersonTransfer" resultType="com.sinosoft.ie.booster.yypass.entity.PersonTransferEntity"
+			parameterType="java.lang.String">
+		select * from person_transfer where transfer_person_id = #{transfer_person_id}
+	</select>
+
+	<select id="getTransferCPass" resultType="java.lang.String" parameterType="java.lang.String">
+		select pass_basic_info_id from transfer_c_pass where person_id =#{person_id}
+	</select>
+
+	<select id="getTransferPassLog" resultType="java.lang.String" parameterType="java.lang.String">
+		select pass_basic_info_id from transfer_pass_log where transfer_person_id =#{transfer_person_id}
+		GROUP BY pass_basic_info_id
+	</select>
+
+	<select id="getHisTransferPassLog" resultType="java.lang.String" parameterType="java.lang.String">
+		select pass_basic_info_id from transfer_pass_log where transfer_person_id = #{transfer_person_id}
+          and state in ('13','14')
+          GROUP BY pass_basic_info_id
+	</select>
+
+	<select id="getApproval" resultType="java.lang.String" parameterType="java.lang.String">
+          select pass_basic_info_id from transfer_pass_log where transfer_person_id = #{personId}
+          and state in ('3','4','9','10','18','19','180','190')
+          GROUP BY pass_basic_info_id
+	</select>
+
+	<select id ="getNoPowerList" resultType="java.lang.String" parameterType="java.lang.String">
+		select pass_basic_info_id from transfer_pass_log_no_power
+		where
+		person_id = #{userId} and state in (
+		select pass_log_state from pass_is_power where
+		1=1
+		and pass_basic_info_state in
+		<foreach item="item" index="index" collection="state.split(',')"  open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		)
+		GROUP BY pass_basic_info_id
+	</select>
+
+	<select id="getRjglyApproval" resultType="java.lang.String" parameterType="java.lang.String">
+         select pass_basic_info_id from transfer_pass_log where transfer_person_id = #{personId}
+          and state in ('130','150')
+          GROUP BY pass_basic_info_id
+	</select>
+
+
+
+
+</mapper>

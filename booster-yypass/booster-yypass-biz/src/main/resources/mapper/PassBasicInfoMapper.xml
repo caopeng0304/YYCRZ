@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinosoft.ie.booster.yypass.mapper.PassBasicInfoMapper">
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.sinosoft.ie.booster.yypass.entity.PassBasicInfoEntity">
+                    <id column="id" property="id" />
+			        <result column="s_no" property="sNo" />
+                    <result column="person_type" property="personType" />
+                    <result column="names" property="names" />
+                    <result column="sex" property="sex" />
+                    <result column="phone" property="phone" />
+                    <result column="card_type" property="cardType" />
+			        <result column="card_number" property="cardNumber" />
+			<result column="birthday" property="birthday" />
+			<result column="work_address" property="workAddress" />
+			<result column="start_time" property="startTime" />
+			<result column="end_time" property="endTime" />
+			<result column="unit" property="unit" />
+			<result column="unit_id" property="unitId" />
+			<result column="unit_name" property="unitName" />
+			<result column="reason" property="reason" />
+			<result column="modes" property="modes" />
+			<result column="address" property="address" />
+			<result column="address_detail" property="addressDetail" />
+			<result column="descs" property="descs" />
+			<result column="person_state" property="personState" />
+			<result column="is_inout" property="isInout" />
+			<result column="delay_to_time" property="delayToTime" />
+			<result column="add_time" property="addTime" />
+			<result column="add_person_id" property="addPersonId" />
+			<result column="add_person_name" property="addPersonName" />
+			<result column="id_card" property="idCard" />
+			<result column="is_delete" property="isDelete" />
+
+			<result column="nation" property="nation" />
+			<result column="yr_unit" property="yrUnit" />
+			<result column="yr_name" property="yrName" />
+			<result column="yr_phone" property="yrPhone" />
+			<result column="unit_phone" property="unitPhone" />
+			<result column="emergency_name" property="emergencyName" />
+			<result column="emergency_phone" property="emergencyPhone" />
+			<result column="audit_name" property="auditName" />
+			<result column="delay_start_time" property="delayToTime" />
+			<result column="get_pass_time" property="getPassTime" />
+			<result column="delay_desc" property="delayDesc" />
+			<result column="is_grant_pass" property="isGrantPass" />
+			<result column="delay_number" property="delayNumber" />
+			<result column="is_grant_face" property="isGrantFace" />
+			<result column="grant_face_time" property="grantFaceTime" />
+			<result column="is_promise" property="isPromise" />
+			<result column="promise_time" property="promiseTime" />
+			<result column="door_person_id" property="doorPersonId" />
+			<result column="door_face_id" property="doorFaceId" />
+			<result column="apply_batch" property="applyBatch" />
+			<result column="yr_unit_arr" property="yrUnitArr" />
+			<result column="is_logout" property="isLogout" />
+			<result column="logout_time" property="LogoutTime" />
+			<result column="old_start_time" property="oldStartTime" />
+			<result column="old_end_time" property="oldEndTime" />
+        </resultMap>
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                id, person_type, sex, phone, card_type, card_number,birthday,work_address,start_time,end_time,unit,unit_id,unit_name,reason,modes,
+                address,address_detail,descs,person_state,is_inout,delay_to_time,add_time,add_person_id,add_person_name,id_card,is_delete,
+                nation,yr_unit,yr_name,yr_phone,unit_phone,emergency_name,emergency_phone,audit_name,s_no,delay_start_time,get_pass_time,
+                delay_desc,is_grant_pass,delay_number,is_grant_face,grant_face_time,is_promise,promise_time,door_person_id,door_face_id,
+                apply_batch,yr_unit_arr,is_logout,logout_time,old_start_time,old_end_time
+        </sql>
+
+
+	<select id="getSNo" resultType="java.lang.Long">
+            select s_no from pass_basic_info ORDER BY s_no DESC LIMIT 1
+	</select>
+
+	<select id="groupPersonState" resultType="java.util.Map" parameterType="com.sinosoft.ie.booster.yypass.entity.PassBasicInfoEntity">
+            select person_state,count('person_state') as total from pass_basic_info where is_delete = '1'
+		<if test="yrUnitArr != '' and yrUnitArr != null and addPersonId != null and addPersonId != ''">
+			and (yr_unit_arr like '%${yrUnitArr}%' or add_person_id = #{addPersonId})
+		</if>
+		<!--<if test="yrUnitArr != '' and yrUnitArr != null">
+			and yr_unit_arr like '%${yrUnitArr}%'
+		</if>
+		<if test="addPersonId != null and addPersonId != ''">
+			and dd_person_id = #{addPersonId}
+		</if>-->
+            GROUP BY person_state
+	</select>
+
+	<select id="groupPersonDelayState" resultType="java.util.Map" parameterType="com.sinosoft.ie.booster.yypass.entity.PassBasicInfoEntity">
+		select person_state,count('person_state') as total from pass_basic_info where is_delete = '1'
+		<if test="yrUnitArr != '' and yrUnitArr != null and addPersonId != null and addPersonId != ''">
+			and (yr_unit_arr like '%${yrUnitArr}%' or add_person_id = #{addPersonId})
+		</if>
+		<if test="yrUnitArr != '' and yrUnitArr != null">
+			and yr_unit_arr like '%${yrUnitArr}%'
+		</if>
+		<if test="addPersonId != null and addPersonId != ''">
+			and dd_person_id = #{addPersonId}
+		</if>
+		GROUP BY person_state
+	</select>
+
+
+
+
+</mapper>

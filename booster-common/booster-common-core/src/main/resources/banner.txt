@@ -1,0 +1,6 @@
+${AnsiColor.BRIGHT_CYAN}   / __      ___      ___      ___    __  ___  ___      __
+${AnsiColor.BRIGHT_CYAN}  //   ) ) //   ) ) //   ) ) ((   ) )  / /   //___) ) //  ) )
+${AnsiColor.BRIGHT_CYAN} //   / / //   / / //   / /   \ \     / /   //       //
+${AnsiColor.BRIGHT_CYAN}((___/ / ((___/ / ((___/ / //   ) )  / /   ((____   //
+
+${AnsiColor.BLUE}:: Booster :: Running SpringBoot ${spring.boot.version} :: ${AnsiColor.BRIGHT_BLACK}
